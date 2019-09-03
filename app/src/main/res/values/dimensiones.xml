@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="titulo">24dp</dimen>
+    <dimen name="text_view_ingreso_valores">16dp</dimen>
+    <dimen name="edit_text_ingreso_valores">16dp</dimen>
+
+
+
+</resources>

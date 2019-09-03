@@ -1,3 +1,28 @@
 <resources>
     <string name="app_name">SendMeal</string>
+    <string name="titulo_pantalla_registrar_usuario">Completá tus datos</string>
+    <string name="registrar_usuario_nombre">Nombre</string>
+    <string name="registrar_usuario_email">E-mail</string>
+    <string name="registrar_usuario_clave">Clave</string>
+    <string name="registrar_usuario_repetir_clave">Repetir Clave</string>
+    <string name="registrar_usuario_tarjeta_credito">Tarjeta de crédito</string>
+    <string name="registrar_usuario_tipo_cuenta">Tipo de cuenta</string>
+    <string name="registrar_usuario_tipo_cuenta_1">Base</string>
+    <string name="registrar_usuario_tipo_cuenta_2">Premium</string>
+    <string name="registrar_usuario_tipo_cuenta_3">Full</string>
+    <string name="registrar_usuario_credito_inicial">Crédito inicial</string>
+    <string name="registrar_usuario_notificar_correo">Recibir notificaciones al E-mail</string>
+    <string name="toggleButton_recibir_notificaciones_correo_of">No</string>
+    <string name="toggleButton_recibir_notificaciones_correo_on">Si</string>
+    <string name="es_vendedor">¿Sos vendedor?</string>
+    <string name="aceptar_condiciones">Aceptá los terminos y condiciones</string>
+    <string name="contrasenia_hint"><font size="8">Usá entre 6 y 20 caracteres</font></string>
+    <string name="repetir_contrasenia_hint">Vuelve a escribir la clave</string>
+    <string name="numero_tarjeta_credito_hint">Número</string>
+    <string name="fecha_venc_tarjeta_credito_hint">MM/AA</string>
+    <string name="ccv_tarjeta_credito_hint">CCV</string>
+
+    <string name="boton_registrarme">Registrarme</string>
+
+
 </resources>

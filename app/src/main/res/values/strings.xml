@@ -15,8 +15,10 @@
     <string name="toggleButton_recibir_notificaciones_correo_of">No</string>
     <string name="toggleButton_recibir_notificaciones_correo_on">Si</string>
     <string name="es_vendedor">¿Sos vendedor?</string>
+    <string name="alias_cbu">Alias CBU</string>
+    <string name="CBU">CBU</string>
     <string name="aceptar_condiciones">Aceptá los terminos y condiciones</string>
-    <string name="contrasenia_hint"><font size="8">Usá entre 6 y 20 caracteres</font></string>
+    <string name="contrasenia_hint">Usá entre 6 y 20 caracteres</string>
     <string name="repetir_contrasenia_hint">Vuelve a escribir la clave</string>
     <string name="numero_tarjeta_credito_hint">Número</string>
     <string name="fecha_venc_tarjeta_credito_hint">MM/AA</string>

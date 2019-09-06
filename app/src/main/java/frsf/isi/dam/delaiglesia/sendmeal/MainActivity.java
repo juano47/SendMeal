@@ -79,9 +79,11 @@ public class MainActivity extends AppCompatActivity {
     boolean validacionRepetirClaveCorrecto;
     boolean validacionSintaxisMailCorrecta;
     boolean validacionSintaxisFechaCorrecta;
+    boolean validacionSintaxisCvvCorrecta;
     boolean validacionTarjetaVencimiento;
     boolean validacionAliasCbuVacio;
     boolean validacionCbuVacio;
+
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -101,9 +103,12 @@ public class MainActivity extends AppCompatActivity {
         validacionRepetirClaveCorrecto = false;
         validacionSintaxisMailCorrecta = false;
         validacionSintaxisFechaCorrecta = false;
+        validacionSintaxisCvvCorrecta = false;
         validacionTarjetaVencimiento =false;
+        //corresponde true porque incialmente estos campos están ocultos y no se necesita validación
         validacionAliasCbuVacio = true;
         validacionCbuVacio = true;
+
 
         //Referencias TILs
         tilNombre = (TextInputLayout)findViewById(R.id.til_nombre);
@@ -212,9 +217,17 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onTextChanged(CharSequence s, int i, int i1, int i2) {
                 tilTarjetaNumero.setError(null);
                 validacionTarjetaNumeroVacio = false;
+
+                String working = s.toString();
+                //consume caracteres si se escriben más de 16
+                if (working.length()>16)
+                    txtTarjetaNumero.setText(working.substring(16));
+                else
+                    tilTarjetaNumero.setError(null);
+
             }
 
             @Override
@@ -326,6 +339,18 @@ public class MainActivity extends AppCompatActivity {
                     }
                     else
                         validacionRepetirClaveCorrecto = true;
+                }
+            }
+        });
+
+        txtTarjetaCcv.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus){
+                    if(txtTarjetaCcv.length()<3)
+                        tilTarjetaCcv.setError("CVV inválido");
+                    else
+                        validacionSintaxisCvvCorrecta = true;
                 }
             }
         });
@@ -466,7 +491,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"Ingreso de datos correctos", Toast.LENGTH_SHORT).show();
                 }
                 else
-                    Toast.makeText(getApplicationContext(),"Ingreso de datos incorrectos", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Ingreso de datos incorrectos o algún campo vacío", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -548,6 +573,6 @@ public class MainActivity extends AppCompatActivity {
         else if (anioTarjeta==currentYear && (mesTarjeta - currentMonth) >3 )
             validacionTarjetaVencimiento = true;
         else if(anioTarjeta !=0 && mesTarjeta!=0) //solo mostramos el mensaje si ingreso algún valor
-            Toast.makeText(getApplicationContext(),"Tu tarjeta se encuentra próxima a vencer. Ingresa otra " + anioTarjeta,Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"Tu tarjeta se encuentra vencida o próxima a vencer. Ingresa otra ",Toast.LENGTH_SHORT).show();
     }
 }

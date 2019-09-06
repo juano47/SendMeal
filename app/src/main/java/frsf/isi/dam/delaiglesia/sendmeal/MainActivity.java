@@ -6,6 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.webkit.ConsoleMessage;
 import android.widget.Button;
@@ -32,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private TextInputLayout tilTarjetaNumero;
     private TextInputLayout tilTarjetaFecha;
     private TextInputLayout tilTarjetaCcv;
-
+    private TextInputLayout tilAliasCbu;
+    private TextInputLayout tilCbu;
 
     private EditText txtNombre;
     private EditText txtMail;
@@ -41,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private EditText txtTarjetaNumero;
     private EditText txtTarjetaFecha;
     private EditText txtTarjetaCcv;
+    private EditText txtAliasCbu;
+    private EditText txtCbu;
 
     private TextView textViewCreditoInicial;
 
@@ -57,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
     private String tarjetaNumero;
     private String tarjetaFecha;
     private String tarjetaCcv;
+    private String aliasCbu;
+    private String cbu;
 
     private int valorMinimoSeekBarCreditoInicial;
     private int mesTarjeta;
@@ -69,10 +75,13 @@ public class MainActivity extends AppCompatActivity {
     boolean validacionTarjetaNumeroVacio;
     boolean validacionTarjetaCcvVacio;
     boolean validacionTipoCuentaSeleccionada;
+    boolean validacionClaveCorrecta;
     boolean validacionRepetirClaveCorrecto;
     boolean validacionSintaxisMailCorrecta;
     boolean validacionSintaxisFechaCorrecta;
     boolean validacionTarjetaVencimiento;
+    boolean validacionAliasCbuVacio;
+    boolean validacionCbuVacio;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -87,14 +96,14 @@ public class MainActivity extends AppCompatActivity {
         //necesario para setear el valor inicial del seekbar
         valorMinimoSeekBarCreditoInicial=100;
 
-
-
         validacionTarjetaCcvVacio = false;
         validacionTipoCuentaSeleccionada = false;
         validacionRepetirClaveCorrecto = false;
         validacionSintaxisMailCorrecta = false;
         validacionSintaxisFechaCorrecta = false;
         validacionTarjetaVencimiento =false;
+        validacionAliasCbuVacio = true;
+        validacionCbuVacio = true;
 
         //Referencias TILs
         tilNombre = (TextInputLayout)findViewById(R.id.til_nombre);
@@ -104,6 +113,8 @@ public class MainActivity extends AppCompatActivity {
         tilTarjetaNumero = (TextInputLayout) findViewById(R.id.til_tarjeta_numero);
         tilTarjetaFecha = (TextInputLayout) findViewById(R.id.til_tarjeta_fecha);
         tilTarjetaCcv = (TextInputLayout) findViewById(R.id.til_tarjeta_ccv);
+        tilAliasCbu = (TextInputLayout) findViewById(R.id.textInputLayoutAliasCbu);
+        tilCbu = (TextInputLayout) findViewById(R.id.textInputLayoutCbu);
 
         //Referencias EditTexts
         txtNombre = tilNombre.getEditText();
@@ -113,6 +124,8 @@ public class MainActivity extends AppCompatActivity {
         txtTarjetaNumero = tilTarjetaNumero.getEditText();
         txtTarjetaFecha = tilTarjetaFecha.getEditText();
         txtTarjetaCcv = tilTarjetaCcv.getEditText();
+        txtAliasCbu = tilAliasCbu.getEditText();
+        txtCbu = tilCbu.getEditText();
 
         //TextView que muestra el credito inicial
         textViewCreditoInicial = (TextView) findViewById(R.id.textViewValorCreditoInicial);
@@ -131,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
         txtNombre.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override //método que se ejecuta mientras se está escribiendo
@@ -142,14 +154,12 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
         });
 
         txtMail.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
@@ -160,32 +170,29 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
         });
 
         txtClave.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 tilClave.setError(null);
                 validacionClaveVacio = false;
+                validacionClaveCorrecta = false;
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
         });
 
         txtRepetirClave.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
@@ -196,14 +203,12 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
         });
 
         txtTarjetaNumero.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
@@ -214,11 +219,45 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
         });
 
-        txtTarjetaFecha.addTextChangedListener(mDateEntryWatcher);
+        txtTarjetaFecha.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String working = s.toString();
+                boolean isValid = true;
+                if (working.length()==2 && before ==0) {
+                    if (Integer.parseInt(working) < 1 || Integer.parseInt(working)>12) {
+                        isValid = false;
+                    } else {
+                        mesTarjeta = Integer.parseInt(working);
+                        working+="/";
+                        txtTarjetaFecha.setText(working);
+                        txtTarjetaFecha.setSelection(working.length());
+                    }
+                }
+
+                if (working.length()!=5) {
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    tilTarjetaFecha.setError("Fecha inválida");
+                } else {
+                    anioTarjeta = Integer.parseInt(working.substring(3));
+                    tilTarjetaFecha.setError(null);
+                    validacionSintaxisFechaCorrecta = true;
+                }
+            }
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
 
 
         txtTarjetaCcv.addTextChangedListener(new TextWatcher() {
@@ -228,8 +267,13 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                tilTarjetaCcv.setError(null);
+            public void onTextChanged(CharSequence s, int i, int i1, int i2) {
+                String working = s.toString();
+                //consume caracteres si se escriben más de 3
+                if (working.length()>3)
+                    txtTarjetaCcv.setText(working.substring(3));
+                else
+                    tilTarjetaCcv.setError(null);
             }
 
             @Override
@@ -252,6 +296,20 @@ public class MainActivity extends AppCompatActivity {
                     }
                     else
                         validacionSintaxisMailCorrecta = true;
+                }
+            }
+        });
+
+        txtClave.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if(!hasFocus) {
+                    if (txtClave.length()<6 || txtClave.length()>20){
+                        tilClave.setHintEnabled(false);
+                        tilClave.setError("Clave inválida");
+                    }
+                    else
+                        validacionClaveCorrecta = true;
                 }
             }
         });
@@ -317,10 +375,48 @@ public class MainActivity extends AppCompatActivity {
                 if(chequeado){
                     //si el switch esta activado se muestran los campos "Alias CBU" y "CBU"
                     constraintLayout.setVisibility(View.VISIBLE);
+
+                    //hago las validaciones de campo vacio en tiempo real
+                    validacionAliasCbuVacio = false;
+                    validacionCbuVacio = false;
+                    txtAliasCbu.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                        @Override
+                        public void onFocusChange(View view, boolean hasFocus) {
+                            aliasCbu = txtAliasCbu.getText().toString();
+                            if(!hasFocus){
+                                if (aliasCbu.equals("")){
+                                    tilAliasCbu.setError("Completá este dato");
+                                }
+                                else{
+                                    tilAliasCbu.setError(null);
+                                    validacionAliasCbuVacio = true;
+                                }
+                            }
+                        }
+                    });
+
+                    txtCbu.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                        @Override
+                        public void onFocusChange(View view, boolean hasFocus) {
+                            cbu = txtCbu.getText().toString();
+                            if(!hasFocus){
+                                if (cbu.equals("")){
+                                    tilCbu.setError("Completá este dato");
+                                }
+                                else{
+                                    tilCbu.setError(null);
+                                    validacionCbuVacio = true;
+                                }
+                            }
+                        }
+                    });
                 }
                 else {
                     //si el switch esta desactivado se ocultan los campos "Alias CBU" y "CBU"
                     constraintLayout.setVisibility(View.GONE);
+                    //se colocan las validaciones de campos vacios en true porque no nos interesan
+                    validacionAliasCbuVacio = true;
+                    validacionCbuVacio = true;
                 }
             }
         });
@@ -334,7 +430,6 @@ public class MainActivity extends AppCompatActivity {
                     botonRegistrarse.setEnabled(true);
                 else
                     botonRegistrarse.setEnabled(false);
-
             }
         });
 
@@ -343,11 +438,31 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                //sacamos el foco de todos los editText para que se apliquen las validaciones que estan en los metodos setOnFocusChangeListener
+                checkBoxTerminos.setFocusable(true);
+                checkBoxTerminos.setFocusableInTouchMode(true);
+                checkBoxTerminos.requestFocus();
                 validarDatos();
-                //verificamos si las banderas de validacion están todas en true para confirmar campos validos
+
+                Log.e("validacionNombreVacio ", String.valueOf(validacionNombreVacio));
+                Log.e("validacionMailVacio ", String.valueOf(validacionMailVacio));
+                Log.e("validacionClaveVacio ", String.valueOf(validacionClaveVacio));
+                Log.e("RepetirClaveVacio ", String.valueOf(validacionRepetirClaveVacio));
+                Log.e("TarjetaNumeroVacio ", String.valueOf(validacionTarjetaNumeroVacio));
+                Log.e("TarjetaCcvVacio ", String.valueOf(validacionTarjetaCcvVacio));
+                Log.e("TipoCuentaSeleccionada ", String.valueOf(validacionTipoCuentaSeleccionada));
+                Log.e("SintaxisMailCorrecta ", String.valueOf(validacionSintaxisMailCorrecta));
+                Log.e("RepetirClaveCorrecto ", String.valueOf(validacionRepetirClaveCorrecto));
+                Log.e("SintaxisFechaCorrecta ", String.valueOf(validacionSintaxisFechaCorrecta));
+                Log.e("valTarjetaVencimiento ", String.valueOf(validacionTarjetaVencimiento));
+                Log.e("valClaveCorrecta ", String.valueOf(validacionClaveCorrecta));
+                Log.e("valAliasCbuVacio ", String.valueOf(validacionAliasCbuVacio));
+                Log.e("validacionCbuVacio ", String.valueOf(validacionCbuVacio));
+
+                //verificamos si las banderas de validacion están todas en true para confirmar campos como válidos
                 if(validacionNombreVacio&&validacionMailVacio&&validacionClaveVacio&&validacionRepetirClaveVacio&&validacionTarjetaNumeroVacio
-                &&validacionTarjetaCcvVacio&&validacionTipoCuentaSeleccionada
-                &&validacionSintaxisMailCorrecta&&validacionRepetirClaveCorrecto&&validacionSintaxisFechaCorrecta && validacionTarjetaVencimiento){
+                &&validacionTarjetaCcvVacio&&validacionTipoCuentaSeleccionada&&validacionSintaxisMailCorrecta&&validacionRepetirClaveCorrecto
+                &&validacionSintaxisFechaCorrecta && validacionTarjetaVencimiento&&validacionClaveCorrecta&&validacionAliasCbuVacio&&validacionCbuVacio){
                     Toast.makeText(getApplicationContext(),"Ingreso de datos correctos", Toast.LENGTH_SHORT).show();
                 }
                 else
@@ -365,6 +480,8 @@ public class MainActivity extends AppCompatActivity {
         tarjetaNumero = txtTarjetaNumero.getText().toString();
         tarjetaFecha = txtTarjetaFecha.getText().toString();
         tarjetaCcv = txtTarjetaCcv.getText().toString();
+        aliasCbu = txtAliasCbu.getText().toString();
+        cbu = txtCbu.getText().toString();
 
         //Verificar campos vacios
         if(nombre.equals(""))      {
@@ -414,6 +531,7 @@ public class MainActivity extends AppCompatActivity {
         else
             validacionTarjetaCcvVacio = true;
 
+
         //Verificar si hay un tipo de cuenta seleccionado
         if(radioGroupTipoCuenta.getCheckedRadioButtonId()==-1){
             Toast.makeText(getApplicationContext(),"Seleccioná un tipo de cuenta",Toast.LENGTH_SHORT).show();
@@ -429,42 +547,7 @@ public class MainActivity extends AppCompatActivity {
             validacionTarjetaVencimiento = true;
         else if (anioTarjeta==currentYear && (mesTarjeta - currentMonth) >3 )
             validacionTarjetaVencimiento = true;
+        else if(anioTarjeta !=0 && mesTarjeta!=0) //solo mostramos el mensaje si ingreso algún valor
+            Toast.makeText(getApplicationContext(),"Tu tarjeta se encuentra próxima a vencer. Ingresa otra " + anioTarjeta,Toast.LENGTH_SHORT).show();
     }
-
-    private TextWatcher mDateEntryWatcher = new TextWatcher() {
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            String working = s.toString();
-            boolean isValid = true;
-            if (working.length()==2 && before ==0) {
-                if (Integer.parseInt(working) < 1 || Integer.parseInt(working)>12) {
-                    isValid = false;
-                } else {
-                    mesTarjeta = Integer.parseInt(working);
-                    working+="/";
-                    txtTarjetaFecha.setText(working);
-                    txtTarjetaFecha.setSelection(working.length());
-                }
-            }
-
-            if (working.length()!=5) {
-                isValid = false;
-            }
-
-            if (!isValid) {
-                tilTarjetaFecha.setError("Fecha inválida");
-            } else {
-                anioTarjeta = Integer.parseInt(working.substring(3));
-                tilTarjetaFecha.setError(null);
-                validacionSintaxisFechaCorrecta = true;
-            }
-        }
-        @Override
-        public void afterTextChanged(Editable s) {}
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-    };
 }

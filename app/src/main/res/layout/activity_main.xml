@@ -219,7 +219,7 @@
                 android:hint="@string/ccv_tarjeta_credito_hint"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_weight="0.5"
+                app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toEndOf="@+id/til_tarjeta_fecha"
                 app:layout_constraintTop_toTopOf="@+id/til_tarjeta_fecha" >
 
@@ -227,7 +227,7 @@
                     android:id="@+id/editText3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
+                    android:layout_weight="1"
                     android:ems="10"
                     android:gravity="center"
                     android:textSize="@dimen/edit_text_ingreso_valores"
@@ -392,6 +392,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView9">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextAliasCbu"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -415,9 +416,11 @@
                     app:layout_constraintStart_toStartOf="@+id/textView10"
                     app:layout_constraintTop_toBottomOf="@+id/textView10">
 
-                    <com.google.android.material.textfield.TextInputEditText
+                    <EditText
+                        android:id="@+id/editTextCbu"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:inputType="number"
+                        android:layout_height="wrap_content" />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>

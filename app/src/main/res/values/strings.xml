@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">SendMeal</string>
+
+    <!-- Página registro -->
+
     <string name="titulo_pantalla_registrar_usuario">Completá tus datos</string>
     <string name="registrar_usuario_nombre">Nombre</string>
     <string name="registrar_usuario_email">E-mail</string>
@@ -25,6 +28,20 @@
     <string name="ccv_tarjeta_credito_hint">CCV</string>
 
     <string name="boton_registrarme">Registrarme</string>
+    <string name="title_activity_home">Settings</string>
 
+    <!-- toolbar -->
 
+    <string name="action_registrarme">Registrarme</string>
+    <string name="action_crear_item">Crear Item</string>
+    <string name="action_ver_lista_items">Lista Items</string>
+
+    <!-- nuevo item -->
+    <string name="titulo_pantalla_nuevo_item">Crear nueva comida</string>
+    <string name="id_nuevo_item">ID</string>
+    <string name="titulo_nuevo_item">Nombre del ítem</string>
+    <string name="descripcion_nuevo_item">Descripción</string>
+    <string name="precio_nuevo_item">Precio</string>
+    <string name="calorias_nuevo_item">Calorías</string>
+    <string name="boton_crear_nuevo_item">Guardar</string>
 </resources>

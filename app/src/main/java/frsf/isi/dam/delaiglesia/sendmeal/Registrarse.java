@@ -1,5 +1,6 @@
 package frsf.isi.dam.delaiglesia.sendmeal;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -7,8 +8,8 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
-import android.webkit.ConsoleMessage;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -24,7 +25,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.Calendar;
 import java.util.regex.Pattern;
 
-public class MainActivity extends AppCompatActivity {
+public class Registrarse extends AppCompatActivity {
 
     private TextInputLayout tilNombre;
     private TextInputLayout tilMail;
@@ -88,7 +89,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_registro);
+
+        //define la flecha para volver en la actionBar
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         //por default ocultamos los datos de cbu para el vendedor. Lo podriamos haber hecho en el xml pero se rompía la vista de edición.
         //obtengo la referencia al layout que contiene los datos a mostrar/ocultar
@@ -574,5 +579,16 @@ public class MainActivity extends AppCompatActivity {
             validacionTarjetaVencimiento = true;
         else if(anioTarjeta !=0 && mesTarjeta!=0) //solo mostramos el mensaje si ingreso algún valor
             Toast.makeText(getApplicationContext(),"Tu tarjeta se encuentra vencida o próxima a vencer. Ingresa otra ",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+// Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

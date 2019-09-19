@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
-    tools:context=".MainActivity">
-
+    tools:context=".Registrarse">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -24,7 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="48dp"
+                android:layout_marginTop="45dp"
                 android:layout_marginEnd="8dp"
                 android:text="@string/titulo_pantalla_registrar_usuario"
                 android:textSize="@dimen/titulo"
@@ -339,8 +338,9 @@
                 app:layout_constraintStart_toStartOf="@+id/textView8"
                 app:layout_constraintTop_toBottomOf="@+id/toggleButton" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonRegistrarse"
+                style="@style/MyButtonTheme"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
@@ -348,6 +348,7 @@
                 android:layout_marginEnd="32dp"
                 android:layout_marginBottom="16dp"
                 android:text="@string/boton_registrarme"
+                android:textSize="@dimen/text_view_ingreso_valores"
                 android:enabled="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -393,6 +394,8 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editTextAliasCbu"
+                        android:maxLines="1"
+                        android:inputType="text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </com.google.android.material.textfield.TextInputLayout>

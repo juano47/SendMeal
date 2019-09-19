@@ -3,6 +3,7 @@
     <dimen name="titulo">24dp</dimen>
     <dimen name="text_view_ingreso_valores">16dp</dimen>
     <dimen name="edit_text_ingreso_valores">16dp</dimen>
+    <dimen name="text_view_titulo_item_lista">18dp</dimen>
 
 
 

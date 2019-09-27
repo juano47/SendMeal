@@ -80,6 +80,20 @@ public class Nuevo_item extends AppCompatActivity {
         editTextPrecioPlato = til_precioPlato.getEditText();
         editTextCaloriasPlato = til_caloriasPlato.getEditText();
 
+
+        //acción a realizar al llegar un plato para ser editado desde la lista de platos
+        //obtenemos la fila a editar
+        final Integer fila = (Integer) getIntent().getSerializableExtra("fila");
+        //seteamos los valores en pantalla solo si venimos desde la lista
+        if(fila!=null){
+            Plato plato = Home._PLATOS.get(fila);
+            editTextIdPlato.setText(plato.getId().toString());
+            editTextNombrePlato.setText(plato.getTitulo());
+            editTextDescripcionPlato.setText(plato.getDescripcion());
+            editTextPrecioPlato.setText(plato.getPrecio().toString());
+            editTextCaloriasPlato.setText(plato.getCalorias().toString());
+        }
+
         editTextIdPlato.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -173,12 +187,20 @@ public class Nuevo_item extends AppCompatActivity {
                     //Creamos el plato
                     Plato plato = new Plato(Integer.valueOf(idPlato), nombrePlato, descripcionPlato, Double.valueOf(precioPlato), Integer.valueOf(caloriasPlato));
                     Intent intentResultado = new Intent();
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("plato", plato);
-                    intentResultado.putExtras(bundle);
-
-                    setResult(Activity.RESULT_OK, intentResultado);
-                    finish();
+                    //verificamos si se llamo la actividad desde la lista comprobando si fila!=null en el getIntent
+                    if ( getIntent().getSerializableExtra("fila")!=null){
+                        Home._PLATOS.set(fila,plato);
+                        setResult(Activity.RESULT_OK, intentResultado);
+                        finish();
+                    }
+                    //si se llamo desde Home:
+                    else{
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("plato", plato);
+                        intentResultado.putExtras(bundle);
+                        setResult(Activity.RESULT_OK, intentResultado);
+                        finish();
+                    }
                 }
                 else
                     Toast.makeText(getApplicationContext(),"Ingreso de datos incorrectos o algún campo vacío", Toast.LENGTH_SHORT).show();

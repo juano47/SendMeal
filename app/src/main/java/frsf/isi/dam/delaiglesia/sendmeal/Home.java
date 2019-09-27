@@ -23,8 +23,7 @@ public class Home extends AppCompatActivity {
 
     private static final int CODIGO_CREAR_ITEM = 10;
 
-    private List<Plato> listaPlatos;
-
+    public static List<Plato> _PLATOS = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,19 +31,19 @@ public class Home extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
 
-        listaPlatos = new ArrayList<>();
+
         Plato plato = new Plato(1, "Plato 1", "descripcion", 22.50, 2);
-        listaPlatos.add(plato);
+        _PLATOS.add(plato);
         plato = new Plato(1, "Plato 2", "descripcion", 120.00, 2);
-        listaPlatos.add(plato);
-        plato = new Plato(1, "Plato 1", "descripcion", 20.50, 2);
-        listaPlatos.add(plato);plato = new Plato(1, "Plato 3", "descripcion", 520.55, 2);
-        listaPlatos.add(plato);plato = new Plato(1, "Plato 4", "descripcion", 70.40, 2);
-        listaPlatos.add(plato);
+        _PLATOS.add(plato);
+        plato = new Plato(1, "Plato 3", "descripcion", 520.55, 2);
+        _PLATOS.add(plato);
+        plato = new Plato(1, "Plato 4", "descripcion", 70.40, 2);
+        _PLATOS.add(plato);
         plato = new Plato(1, "Plato 5", "descripcion", 220.90, 2);
-        listaPlatos.add(plato);
+        _PLATOS.add(plato);
         plato = new Plato(1, "Plato 6", "descripcion", 55.00, 2);
-        listaPlatos.add(plato);
+        _PLATOS.add(plato);
 
     }
 
@@ -67,7 +66,7 @@ public class Home extends AppCompatActivity {
                 return true;
             case R.id.action_ver_lista:
                 Intent i3 = new Intent(this, ListaItems.class);
-                i3.putExtra("listaPlatos", (Serializable) listaPlatos);
+                i3.putExtra("listaPlatos", (Serializable) _PLATOS);
                 startActivity(i3);
                 return true;
             default:
@@ -85,7 +84,7 @@ public class Home extends AppCompatActivity {
                 Plato plato;
                 Bundle objetoRecibido = data.getExtras();
                 plato = (Plato) objetoRecibido.getSerializable("plato");
-                listaPlatos.add(plato);
+                _PLATOS.add(plato);
 
             }
         }

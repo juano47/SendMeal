@@ -78,4 +78,9 @@ public class ListaItems extends AppCompatActivity implements AdaptadorItem.Callb
         i.putExtra("listaPlatos", listaPlatos);
         startActivityForResult(i, CODIGO_EDITAR_ITEM);
     }
+
+    @Override
+    public void actualizarLista() {
+        miAdaptador.notifyDataSetChanged();
+    }
 }

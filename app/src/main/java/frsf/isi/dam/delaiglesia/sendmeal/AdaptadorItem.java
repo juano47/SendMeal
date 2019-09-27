@@ -1,12 +1,15 @@
 package frsf.isi.dam.delaiglesia.sendmeal;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -32,7 +35,6 @@ public class AdaptadorItem extends RecyclerView.Adapter<AdaptadorItem.ItemViewHo
             //.. should log the error or throw and exception
             Log.e("MyAdapter","Must implement the CallbackInterface in the Activity", ex);
         }
-
     }
 
     @Override
@@ -47,7 +49,6 @@ public class AdaptadorItem extends RecyclerView.Adapter<AdaptadorItem.ItemViewHo
     public void onBindViewHolder(ItemViewHolder holder, final int position) {
         holder.txtPlatoNombre.setText(_PLATOS.get(position).getTitulo());
         holder.txtPlatoPrecio.setText(Double.toString(_PLATOS.get(position).getPrecio()));
-
     }
 
     //Método necesario
@@ -63,6 +64,7 @@ public class AdaptadorItem extends RecyclerView.Adapter<AdaptadorItem.ItemViewHo
     public interface CallbackInterface {
         //este metodo se sobreescribe en ListaItems y se usan los parametros que se le pasan para armar el Intent
         void onHandleSelection(int position, ArrayList<Plato> listaPlatos);
+        void actualizarLista();
     }
 
     public class ItemViewHolder extends RecyclerView.ViewHolder {
@@ -83,8 +85,6 @@ public class AdaptadorItem extends RecyclerView.Adapter<AdaptadorItem.ItemViewHo
             buttonEditar = view.findViewById(R.id.buttonEditar);
             buttonEliminar = view.findViewById(R.id.buttonQuitar);
 
-
-
             buttonEditar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -92,11 +92,39 @@ public class AdaptadorItem extends RecyclerView.Adapter<AdaptadorItem.ItemViewHo
                     Integer fila = getAdapterPosition();
                     //se llama a la función que se ejecutará en ListaItems para enviar el intent a NuevoItem
                     mCallback.onHandleSelection(fila, (ArrayList<Plato>) _PLATOS);
-
-
                 }
             });
 
+            buttonEliminar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //obtengo la fila donde se clickeo el botón
+                    int fila = getAdapterPosition();
+                    crearCuadroDialogo(fila);
+                };
+            });
         }
+    }
+
+    private void crearCuadroDialogo(final int fila) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage("¿Realmente desea eliminar el plato?")
+                .setTitle("Quitar plato")
+                .setPositiveButton("Si",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dlgInt, int i) {
+                                _PLATOS.remove(fila);
+                                mCallback.actualizarLista();
+                            }
+                        })
+                .setNegativeButton("No",
+                        new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dlgInt, int i) {
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

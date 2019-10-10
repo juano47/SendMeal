@@ -32,17 +32,17 @@ public class Home extends AppCompatActivity {
 
 
 
-        Plato plato = new Plato(1, "Plato 1", "descripcion", 22.50, 2);
+        Plato plato = new Plato(1, "Plato 1", "descripcion", 22.50, 2, false);
         _PLATOS.add(plato);
-        plato = new Plato(1, "Plato 2", "descripcion", 120.00, 2);
+        plato = new Plato(1, "Plato 2", "descripcion", 120.00, 2, false);
         _PLATOS.add(plato);
-        plato = new Plato(1, "Plato 3", "descripcion", 520.55, 2);
+        plato = new Plato(1, "Plato 3", "descripcion", 520.55, 2, false);
         _PLATOS.add(plato);
-        plato = new Plato(1, "Plato 4", "descripcion", 70.40, 2);
+        plato = new Plato(1, "Plato 4", "descripcion", 70.40, 2, false);
         _PLATOS.add(plato);
-        plato = new Plato(1, "Plato 5", "descripcion", 220.90, 2);
+        plato = new Plato(1, "Plato 5", "descripcion", 220.90, 2, false);
         _PLATOS.add(plato);
-        plato = new Plato(1, "Plato 6", "descripcion", 55.00, 2);
+        plato = new Plato(1, "Plato 6", "descripcion", 55.00, 2, false);
         _PLATOS.add(plato);
 
     }

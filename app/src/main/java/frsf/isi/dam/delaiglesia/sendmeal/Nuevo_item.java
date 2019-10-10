@@ -94,6 +94,26 @@ public class Nuevo_item extends AppCompatActivity {
             editTextCaloriasPlato.setText(plato.getCalorias().toString());
         }
 
+        //acción a realizar al llegar un plato desde una notificación de oferta
+        Plato plato = (Plato) getIntent().getSerializableExtra("plato");
+        Intent intent = getIntent();
+
+        //seteamos los valores en pantalla solo si venimos desde la notificacion
+        if(plato!=null){
+            editTextIdPlato.setText(plato.getId().toString());
+            editTextNombrePlato.setText(plato.getTitulo());
+            editTextDescripcionPlato.setText(plato.getDescripcion());
+            editTextPrecioPlato.setText(plato.getPrecio().toString());
+            editTextCaloriasPlato.setText(plato.getCalorias().toString());
+
+            //deshabilitamos todos los campos editables
+            editTextIdPlato.setEnabled(false);
+            editTextNombrePlato.setEnabled(false);
+            editTextDescripcionPlato.setEnabled(false);
+            editTextPrecioPlato.setEnabled(false);
+            editTextCaloriasPlato.setEnabled(false);
+        }
+
         editTextIdPlato.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -185,7 +205,7 @@ public class Nuevo_item extends AppCompatActivity {
                 validarDatos();
                 if(validacionIdVacio&&validacionNombreVacio&&validacionDescripcionVacio&&validacionPrecioVacio&&validacionCaloriasVacio){
                     //Creamos el plato
-                    Plato plato = new Plato(Integer.valueOf(idPlato), nombrePlato, descripcionPlato, Double.valueOf(precioPlato), Integer.valueOf(caloriasPlato));
+                    Plato plato = new Plato(Integer.valueOf(idPlato), nombrePlato, descripcionPlato, Double.valueOf(precioPlato), Integer.valueOf(caloriasPlato), false);
                     Intent intentResultado = new Intent();
                     //verificamos si se llamo la actividad desde la lista comprobando si fila!=null en el getIntent
                     if ( getIntent().getSerializableExtra("fila")!=null){

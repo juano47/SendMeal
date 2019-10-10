@@ -1,7 +1,10 @@
 package frsf.isi.dam.delaiglesia.sendmeal;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +13,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +30,7 @@ public class AdaptadorItem extends RecyclerView.Adapter<AdaptadorItem.ItemViewHo
     Context context;
     private CallbackInterface mCallback;
 
+
     public AdaptadorItem(List<Plato> productoItemList, Context context) {
         _PLATOS = productoItemList;
         this.context = context;
@@ -35,12 +42,27 @@ public class AdaptadorItem extends RecyclerView.Adapter<AdaptadorItem.ItemViewHo
             //.. should log the error or throw and exception
             Log.e("MyAdapter","Must implement the CallbackInterface in the Activity", ex);
         }
+
+        notifyDataSetChanged();
     }
 
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflate the layout file
         View productoView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_item, parent, false);
+
+        //definir la altura del layoutEliminar igual a la del layoutMostrar, teniendo en cuenta que el layoutMostrar puede cambiar su medida
+        //si se cambia su diseño
+        //**************************
+        ConstraintLayout layoutMostrar = productoView.findViewById(R.id.idLayoutMostrar);
+        // Gets the layout params that will allow you to resize the layout
+        int alturaLayoutMostrar = layoutMostrar.getLayoutParams().height;
+
+        ConstraintLayout layoutEliminar = productoView.findViewById(R.id.idLayoutEliminar);
+        layoutEliminar.setMinHeight(alturaLayoutMostrar);
+        layoutEliminar.requestLayout();
+        //***************************
+
         ItemViewHolder gvh = new ItemViewHolder(productoView);
         return gvh;
     }
@@ -64,7 +86,6 @@ public class AdaptadorItem extends RecyclerView.Adapter<AdaptadorItem.ItemViewHo
     public interface CallbackInterface {
         //este metodo se sobreescribe en ListaItems y se usan los parametros que se le pasan para armar el Intent
         void onHandleSelection(int position, ArrayList<Plato> listaPlatos);
-        void actualizarLista();
     }
 
     public class ItemViewHolder extends RecyclerView.ViewHolder {
@@ -72,9 +93,10 @@ public class AdaptadorItem extends RecyclerView.Adapter<AdaptadorItem.ItemViewHo
         TextView txtPlatoNombre;
         TextView txtPlatoPrecio;
         Button buttonOferta;
-        Button buttonEditar;
-        Button buttonEliminar;
 
+        ConstraintLayout layoutMostrar;
+        ConstraintLayout layoutEditar;
+        ConstraintLayout layoutEliminar;
 
         public ItemViewHolder(View view) {
             super(view);
@@ -82,31 +104,34 @@ public class AdaptadorItem extends RecyclerView.Adapter<AdaptadorItem.ItemViewHo
             txtPlatoNombre=view.findViewById(R.id.textViewNombrePlato);
             txtPlatoPrecio = view.findViewById(R.id.textViewPrecioPlato);
             buttonOferta = view.findViewById(R.id.buttonOferta);
-            buttonEditar = view.findViewById(R.id.buttonEditar);
-            buttonEliminar = view.findViewById(R.id.buttonQuitar);
+            layoutMostrar = view.findViewById(R.id.idLayoutMostrar);
+            layoutEditar = view.findViewById(R.id.idLayoutEditar);
+            layoutEliminar = view.findViewById(R.id.idLayoutEliminar);
 
-            buttonEditar.setOnClickListener(new View.OnClickListener() {
+            buttonOferta.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //obtengo la fila donde se clickeo el botón
-                    Integer fila = getAdapterPosition();
-                    //se llama a la función que se ejecutará en ListaItems para enviar el intent a NuevoItem
-                    mCallback.onHandleSelection(fila, (ArrayList<Plato>) _PLATOS);
+                    //cambiamos la bandera enOferta
+                    _PLATOS.get(getAdapterPosition()).setEnOferta(true);
+
+                    //enviamos un intent con el plato a un hilo de tipo IntentService
+                    Intent nuevoServicio = new Intent(context, MyIntentService.class);
+                    Plato plato = _PLATOS.get(getAdapterPosition());
+                    nuevoServicio.putExtra("plato", plato);
+                    context.startService(nuevoServicio);
                 }
             });
 
-            buttonEliminar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //obtengo la fila donde se clickeo el botón
-                    int fila = getAdapterPosition();
-                    crearCuadroDialogo(fila);
-                };
-            });
         }
     }
 
-    private void crearCuadroDialogo(final int fila) {
+    public void editarPlato(int fila){
+        //se llama a la función que se ejecutará en ListaItems para enviar el intent a NuevoItem
+        mCallback.onHandleSelection(fila, (ArrayList<Plato>) _PLATOS);
+        notifyItemChanged(fila);
+    }
+
+    public void eliminarPlato(final int fila) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage("¿Realmente desea eliminar el plato?")
                 .setTitle("Quitar plato")
@@ -115,13 +140,14 @@ public class AdaptadorItem extends RecyclerView.Adapter<AdaptadorItem.ItemViewHo
                             @Override
                             public void onClick(DialogInterface dlgInt, int i) {
                                 _PLATOS.remove(fila);
-                                mCallback.actualizarLista();
+                                notifyItemRemoved(fila);
                             }
                         })
                 .setNegativeButton("No",
                         new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dlgInt, int i) {
+                            notifyItemChanged(fila);
                     }
                 });
         AlertDialog dialog = builder.create();

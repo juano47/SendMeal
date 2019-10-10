@@ -5,6 +5,7 @@
     <color name="colorAccent">#55B198</color>
     <color name="colorActionBarTitle">#F06292</color>
     <color name="colorLetra">#FFFFFF</color>
+    <color name="colorFondoCardView">#E6E6E6</color>
 
 
 </resources>

@@ -27,6 +27,8 @@
             android:name=".Registrarse"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <service android:name=".MyIntentService"></service>
     </application>
 
 </manifest>

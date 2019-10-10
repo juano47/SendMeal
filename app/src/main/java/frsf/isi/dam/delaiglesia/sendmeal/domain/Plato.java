@@ -8,13 +8,15 @@ public class Plato implements Serializable {
     private String descripcion;
     private Double precio;
     private Integer calorias;
+    private boolean enOferta;
 
-    public Plato(Integer id, String titulo, String descripcion, Double precio, Integer calorias) {
+    public Plato(Integer id, String titulo, String descripcion, Double precio, Integer calorias, boolean enOferta) {
         this.id = id;
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.precio = precio;
         this.calorias = calorias;
+        this.enOferta = enOferta;
     }
 
     public Plato() {
@@ -60,4 +62,8 @@ public class Plato implements Serializable {
     public void setCalorias(Integer calorias) {
         this.calorias = calorias;
     }
+
+    public boolean getEnOferta(){return enOferta;}
+
+    public void setEnOferta(boolean enOferta) {this.enOferta = enOferta;}
 }

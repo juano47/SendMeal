@@ -1,4 +1,4 @@
-package frsf.isi.dam.delaiglesia.sendmeal;
+package frsf.isi.dam.delaiglesia.sendmeal.Auxiliares;
 
 import android.graphics.Canvas;
 import android.util.Log;
@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
+
+import frsf.isi.dam.delaiglesia.sendmeal.AdaptadorItem;
 
 public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
 

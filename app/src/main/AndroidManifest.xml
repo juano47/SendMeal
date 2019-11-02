@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="frsf.isi.dam.delaiglesia.sendmeal">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,8 +12,14 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="GoogleAppIndexingWarning"
+        android:usesCleartextTraffic="true" > <!-- esto es necesario a partir del API 28, dado que en esta versión del API se
+                                                deshabilita por defecto el uso de HTTP, y solo se permite usar HTTPS -->
+
+
+
         <activity android:name=".ListaItems"></activity>
+        <activity android:name=".ListaBusqueda"></activity>
         <activity android:name=".Nuevo_item" />
         <activity
             android:name=".Home"

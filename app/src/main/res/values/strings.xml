@@ -36,6 +36,8 @@
     <string name="action_crear_item">Crear Item</string>
     <string name="action_ver_lista_items">Lista Items</string>
 
+    <string name="action_buscar_item">Buscar</string>
+
     <!-- nuevo item -->
     <string name="titulo_pantalla_nuevo_item">Crear nueva comida</string>
     <string name="id_nuevo_item">ID</string>

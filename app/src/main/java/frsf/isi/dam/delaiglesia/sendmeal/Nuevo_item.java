@@ -1,13 +1,14 @@
 package frsf.isi.dam.delaiglesia.sendmeal;
 
-import androidx.annotation.Nullable;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -19,8 +20,11 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.io.Serializable;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import frsf.isi.dam.delaiglesia.sendmeal.Dao.PlatoRepository;
 import frsf.isi.dam.delaiglesia.sendmeal.domain.Plato;
 
 public class Nuevo_item extends AppCompatActivity {
@@ -50,6 +54,8 @@ public class Nuevo_item extends AppCompatActivity {
     private boolean validacionCaloriasVacio;
 
     private Button buttonGuardar;
+
+    ArrayList<Plato> platos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +92,8 @@ public class Nuevo_item extends AppCompatActivity {
         final Integer fila = (Integer) getIntent().getSerializableExtra("fila");
         //seteamos los valores en pantalla solo si venimos desde la lista
         if(fila!=null){
-            Plato plato = Home._PLATOS.get(fila);
+            platos = (ArrayList<Plato>) getIntent().getSerializableExtra("listaPlatos");
+            Plato plato = platos.get(fila);
             editTextIdPlato.setText(plato.getId().toString());
             editTextNombrePlato.setText(plato.getTitulo());
             editTextDescripcionPlato.setText(plato.getDescripcion());
@@ -209,16 +216,13 @@ public class Nuevo_item extends AppCompatActivity {
                     Intent intentResultado = new Intent();
                     //verificamos si se llamo la actividad desde la lista comprobando si fila!=null en el getIntent
                     if ( getIntent().getSerializableExtra("fila")!=null){
-                        Home._PLATOS.set(fila,plato);
-                        setResult(Activity.RESULT_OK, intentResultado);
-                        finish();
+
+                        PlatoRepository.getInstance().actualizarPlato(plato, miHandler);
+
                     }
                     //si se llamo desde Home:
                     else{
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("plato", plato);
-                        intentResultado.putExtras(bundle);
-                        setResult(Activity.RESULT_OK, intentResultado);
+                        PlatoRepository.getInstance().crearPlato(plato, miHandler);
                         finish();
                     }
                 }
@@ -226,8 +230,22 @@ public class Nuevo_item extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"Ingreso de datos incorrectos o algún campo vacío", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
+
+    Handler miHandler = new Handler(Looper.myLooper()){
+        @Override
+        public void handleMessage(Message msg) {
+            Log.d("APP_2","Vuelve al handler"+msg.arg1);
+
+            switch (msg.arg1 ){
+                case PlatoRepository._UPDATE_PLATO:
+                    Intent i = new Intent(Nuevo_item.this,ListaItems.class);
+                    startActivity(i);
+                    break;
+            }
+        }
+    };
+
 
     private void validarDatos() {
         //setear variables

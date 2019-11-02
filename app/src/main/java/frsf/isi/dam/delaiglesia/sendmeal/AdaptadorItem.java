@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,18 +24,20 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.util.List;
 
+import frsf.isi.dam.delaiglesia.sendmeal.Dao.PlatoRepository;
 import frsf.isi.dam.delaiglesia.sendmeal.domain.Plato;
 
-import static frsf.isi.dam.delaiglesia.sendmeal.Home._PLATOS;
+
 
 public class AdaptadorItem extends RecyclerView.Adapter<AdaptadorItem.ItemViewHolder>{
     private static final int CODIGO_EDITAR_ITEM = 20;
     Context context;
     private CallbackInterface mCallback;
-
+    private List<Plato> platos;
+    private int fila2;
 
     public AdaptadorItem(List<Plato> productoItemList, Context context) {
-        _PLATOS = productoItemList;
+        platos = productoItemList;
         this.context = context;
 
         // .. Attach the interface
@@ -69,15 +74,15 @@ public class AdaptadorItem extends RecyclerView.Adapter<AdaptadorItem.ItemViewHo
 
     @Override
     public void onBindViewHolder(ItemViewHolder holder, final int position) {
-        holder.txtPlatoNombre.setText(_PLATOS.get(position).getTitulo());
-        holder.txtPlatoPrecio.setText(Double.toString(_PLATOS.get(position).getPrecio()));
+        holder.txtPlatoNombre.setText(platos.get(position).getTitulo());
+        holder.txtPlatoPrecio.setText(Double.toString(platos.get(position).getPrecio()));
     }
 
     //Método necesario
     @Override
     public int getItemCount() {
-        if(_PLATOS != null)
-            return _PLATOS.size();
+        if(platos != null)
+            return platos.size();
         else
             return 0;
     }
@@ -94,9 +99,9 @@ public class AdaptadorItem extends RecyclerView.Adapter<AdaptadorItem.ItemViewHo
         TextView txtPlatoPrecio;
         Button buttonOferta;
 
-        ConstraintLayout layoutMostrar;
-        ConstraintLayout layoutEditar;
-        ConstraintLayout layoutEliminar;
+        public ConstraintLayout layoutMostrar;
+        public ConstraintLayout layoutEditar;
+        public ConstraintLayout layoutEliminar;
 
         public ItemViewHolder(View view) {
             super(view);
@@ -112,11 +117,11 @@ public class AdaptadorItem extends RecyclerView.Adapter<AdaptadorItem.ItemViewHo
                 @Override
                 public void onClick(View view) {
                     //cambiamos la bandera enOferta
-                    _PLATOS.get(getAdapterPosition()).setEnOferta(true);
+                    platos.get(getAdapterPosition()).setEnOferta(true);
 
                     //enviamos un intent con el plato a un hilo de tipo IntentService
                     Intent nuevoServicio = new Intent(context, MyIntentService.class);
-                    Plato plato = _PLATOS.get(getAdapterPosition());
+                    Plato plato = platos.get(getAdapterPosition());
                     nuevoServicio.putExtra("plato", plato);
                     context.startService(nuevoServicio);
                 }
@@ -127,11 +132,12 @@ public class AdaptadorItem extends RecyclerView.Adapter<AdaptadorItem.ItemViewHo
 
     public void editarPlato(int fila){
         //se llama a la función que se ejecutará en ListaItems para enviar el intent a NuevoItem
-        mCallback.onHandleSelection(fila, (ArrayList<Plato>) _PLATOS);
-        notifyItemChanged(fila);
+        mCallback.onHandleSelection(fila, (ArrayList<Plato>) platos);
+
     }
 
     public void eliminarPlato(final int fila) {
+        fila2 = fila;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage("¿Realmente desea eliminar el plato?")
                 .setTitle("Quitar plato")
@@ -139,8 +145,8 @@ public class AdaptadorItem extends RecyclerView.Adapter<AdaptadorItem.ItemViewHo
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dlgInt, int i) {
-                                _PLATOS.remove(fila);
-                                notifyItemRemoved(fila);
+                                PlatoRepository.getInstance().borrarPlato(platos.get(fila), miHandler);
+
                             }
                         })
                 .setNegativeButton("No",
@@ -153,4 +159,24 @@ public class AdaptadorItem extends RecyclerView.Adapter<AdaptadorItem.ItemViewHo
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
+    Handler miHandler = new Handler(Looper.myLooper()){
+        @Override
+        public void handleMessage(Message msg) {
+
+            switch (msg.arg1 ) {
+                case PlatoRepository._BORRADO_PLATO:
+                    //accion eliminar
+                    platos.remove(fila2);
+                    notifyItemRemoved(fila2);
+
+                    break;
+
+                case PlatoRepository._ERROR_PLATO:
+
+                    break;
+
+            }
+        }
+    };
 }

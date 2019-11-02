@@ -1,16 +1,5 @@
 package frsf.isi.dam.delaiglesia.sendmeal;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -28,13 +17,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.material.textfield.TextInputLayout;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Random;
-
 
 import frsf.isi.dam.delaiglesia.sendmeal.Auxiliares.RecyclerItemTouchHelper;
 import frsf.isi.dam.delaiglesia.sendmeal.Dao.PlatoRepository;
@@ -43,15 +38,12 @@ import io.apptik.widget.MultiSlider;
 
 import static android.app.Notification.CATEGORY_PROMO;
 
-public class ListaItems extends AppCompatActivity implements AdaptadorItem.CallbackInterface, RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
+public class ListaBusqueda extends AppCompatActivity implements AdaptadorItem.CallbackInterface, RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
     private static final int CODIGO_EDITAR_ITEM = 20;
     private RecyclerView mRecyclerView;
     private AdaptadorItem miAdaptador;
-
-    private ArrayList<Plato>  listaDataSetCompleta;
-
-    private ArrayList<Plato> listaCompleta;
+    private ArrayList<Plato> lista;
     private Context context;
 
 
@@ -67,23 +59,20 @@ public class ListaItems extends AppCompatActivity implements AdaptadorItem.Callb
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        //solicitamos la lista de platos guardada en el servidor
-        PlatoRepository.getInstance().listarPlatos(miHandler);
-
         //getting the recyclerview from xml
         mRecyclerView = (RecyclerView) findViewById(R.id.reciclerViewListaItems);
         //mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        listaCompleta = new ArrayList<>();
-
+        lista = (ArrayList<Plato>) getIntent().getSerializableExtra("platos");
         //set adapter to recyclerview
-        miAdaptador = new AdaptadorItem(listaCompleta, context);
+        miAdaptador = new AdaptadorItem(lista, context);
         mRecyclerView.setAdapter(miAdaptador);
         miAdaptador.notifyDataSetChanged();
 
+
         ItemTouchHelper.SimpleCallback simpleCallback =
-                new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT |ItemTouchHelper.RIGHT, ListaItems.this);
+                new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT |ItemTouchHelper.RIGHT, ListaBusqueda.this);
 
         new ItemTouchHelper(simpleCallback).attachToRecyclerView(mRecyclerView);
 
@@ -105,8 +94,8 @@ public class ListaItems extends AppCompatActivity implements AdaptadorItem.Callb
                 miAdaptador.notifyDataSetChanged();
             }
         }
-    }
-*/
+    }*/
+
     //https://codeday.me/es/qa/20190803/1176380.html
     @Override
     public void onHandleSelection(int position, ArrayList<Plato> listaPlatos) {
@@ -115,7 +104,7 @@ public class ListaItems extends AppCompatActivity implements AdaptadorItem.Callb
         Intent i = new Intent(this, Nuevo_item.class);
         i.putExtra("fila", position);
         i.putExtra("listaPlatos", listaPlatos);
-        startActivity(i);
+        startActivityForResult(i, CODIGO_EDITAR_ITEM);
     }
 
     @Override
@@ -168,122 +157,29 @@ public class ListaItems extends AppCompatActivity implements AdaptadorItem.Callb
         public void handleMessage(Message msg) {
 
             switch (msg.arg1 ) {
-                case PlatoRepository._CONSULTA_PLATO:
-                    listaDataSetCompleta = PlatoRepository.getInstance().getListaPlatosCompleta();
-                    //solo al momento de tener la lista de platos desde el servidor la seteamos en pantalla
-                    listaCompleta.addAll(listaDataSetCompleta);
-                    miAdaptador.notifyDataSetChanged();
-                    break;
                 case PlatoRepository._BORRADO_PLATO:
                     //accion eliminar
-
-
                     break;
-                case PlatoRepository._BUSQUEDA_PLATO:
-                    ArrayList<Plato> listaDataSetBusqueda = PlatoRepository.getInstance().getListaPlatosBusqueda();
-                    if(!listaDataSetBusqueda.isEmpty()) {
-                        Intent i2 = new Intent(context, ListaBusqueda.class);
-                        i2.putExtra("platos", listaDataSetBusqueda);
-                        startActivity(i2);
-                    }
-                    else {
-                        // Crear un builder y vincularlo a la actividad que lo mostrará
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        //Configurar las características
-                        builder.setMessage("No se han encontrado resultados");
-                        //Obtener una instancia de cuadro de dialogo
-                        AlertDialog dialog = builder.create();
-                        //Mostrarlo
-                        dialog.show();
-                    }
-
 
                 case PlatoRepository._ERROR_PLATO:
 
                     break;
-
             }
         }
     };
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_toolbar_lista_items, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
 
-    //flecha volver en la actionbar y acción buscar
+
+    //flecha volver en la actionbar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
-                Intent i3 = new Intent(this, Home.class);
+                Intent i3 = new Intent(this, ListaItems.class);
                 startActivity(i3);
-                return true;
-            case R.id.action_buscar_item:
-                // Get the layout inflater
-                LayoutInflater inflater = getLayoutInflater();
-                // Inflar y establecer el layout para el dialogo
-                // Pasar nulo como vista principal porque va en el diseño del diálogo
-                final View v = inflater.inflate(R.layout.dialogo_busqueda, null);
-
-                final EditText txtnombre = v.findViewById(R.id.editTextNombreItemABuscar);
-                MultiSlider multiSlider = v.findViewById(R.id.range_slider);
-                final TextView txtmin = v.findViewById(R.id.textViewPrecioMin);
-                final TextView txtmax = v.findViewById(R.id.textViewPrecioMax);
-
-                multiSlider.setMax(1000);
-
-                txtmin.setText(String.valueOf(multiSlider.getThumb(0).getValue()));
-                txtmax.setText(String.valueOf(multiSlider.getThumb(1).getValue()));
-
-                multiSlider.setOnThumbValueChangeListener(new MultiSlider.SimpleChangeListener() {
-                    @Override
-                    public void onValueChanged(MultiSlider multiSlider, MultiSlider.Thumb thumb, int
-                            thumbIndex, int value) {
-                        if (thumbIndex == 0) {
-                            txtmin.setText(String.valueOf(value));
-                        } else {
-                            txtmax.setText(String.valueOf(value));
-                        }
-                    }
-                });
-
-
-                // Crear un builder y vincularlo a la actividad que lo mostrará
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                //Configurar las características
-                builder
-                        .setPositiveButton("Buscar",
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dlgInt, int i) {
-                                        String nombre = txtnombre.getText().toString();
-                                        Double min = Double.valueOf(txtmin.getText().toString());
-                                        Double max = Double.valueOf(txtmax.getText().toString());
-                                        PlatoRepository.getInstance().buscarPlatos(nombre, min , max, miHandler);
-
-                                    }
-                                })
-                        .setNegativeButton("Cancelar",
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dlgInt, int i) {
-                                        //para cancelar no hace falta hacer nada, por default se cierra la ventana de dialogo
-                                    }
-                                })
-                .setView(v);
-
-                //Obtener una instancia de cuadro de dialogo
-                AlertDialog dialog = builder.create();
-                //Mostrarlo
-                dialog.show();
-
-
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
 }

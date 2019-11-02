@@ -6,12 +6,9 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,33 +20,17 @@ public class Home extends AppCompatActivity {
 
     private static final int CODIGO_CREAR_ITEM = 10;
 
-    public static List<Plato> _PLATOS = new ArrayList<>();
+   //public static List<Plato> _PLATOS = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-
-
-        Plato plato = new Plato(1, "Plato 1", "descripcion", 22.50, 2, false);
-        _PLATOS.add(plato);
-        plato = new Plato(1, "Plato 2", "descripcion", 120.00, 2, false);
-        _PLATOS.add(plato);
-        plato = new Plato(1, "Plato 3", "descripcion", 520.55, 2, false);
-        _PLATOS.add(plato);
-        plato = new Plato(1, "Plato 4", "descripcion", 70.40, 2, false);
-        _PLATOS.add(plato);
-        plato = new Plato(1, "Plato 5", "descripcion", 220.90, 2, false);
-        _PLATOS.add(plato);
-        plato = new Plato(1, "Plato 6", "descripcion", 55.00, 2, false);
-        _PLATOS.add(plato);
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
+        getMenuInflater().inflate(R.menu.menu_toolbar_home, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -66,7 +47,6 @@ public class Home extends AppCompatActivity {
                 return true;
             case R.id.action_ver_lista:
                 Intent i3 = new Intent(this, ListaItems.class);
-                i3.putExtra("listaPlatos", (Serializable) _PLATOS);
                 startActivity(i3);
                 return true;
             default:
@@ -74,20 +54,4 @@ public class Home extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        // Nos fijamos de que actividad viene el resultado
-        if (requestCode == CODIGO_CREAR_ITEM) {
-            // Verificamos que el request tuvo éxito
-            if (resultCode == RESULT_OK) {
-                Plato plato;
-                Bundle objetoRecibido = data.getExtras();
-                plato = (Plato) objetoRecibido.getSerializable("plato");
-                _PLATOS.add(plato);
-
-            }
-        }
-
-    }
 }

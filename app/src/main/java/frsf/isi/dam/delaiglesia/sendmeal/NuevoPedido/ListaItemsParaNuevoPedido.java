@@ -1,16 +1,13 @@
-package frsf.isi.dam.delaiglesia.sendmeal;
+package frsf.isi.dam.delaiglesia.sendmeal.NuevoPedido;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,43 +16,53 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Random;
 
-
+import frsf.isi.dam.delaiglesia.sendmeal.AdaptadorItem;
 import frsf.isi.dam.delaiglesia.sendmeal.Auxiliares.RecyclerItemTouchHelper;
 import frsf.isi.dam.delaiglesia.sendmeal.Dao.PlatoRepository;
+import frsf.isi.dam.delaiglesia.sendmeal.Home;
+import frsf.isi.dam.delaiglesia.sendmeal.ListaBusqueda;
+import frsf.isi.dam.delaiglesia.sendmeal.ListaItems;
+import frsf.isi.dam.delaiglesia.sendmeal.MyIntentService;
+import frsf.isi.dam.delaiglesia.sendmeal.NuevoItem;
+import frsf.isi.dam.delaiglesia.sendmeal.R;
+import frsf.isi.dam.delaiglesia.sendmeal.domain.ItemPedido;
 import frsf.isi.dam.delaiglesia.sendmeal.domain.Plato;
 import io.apptik.widget.MultiSlider;
 
-import static android.app.Notification.CATEGORY_PROMO;
+public class ListaItemsParaNuevoPedido extends AppCompatActivity{
 
-public class ListaItems extends AppCompatActivity implements AdaptadorItem.CallbackInterface, RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
-
+    private Context context;
     private RecyclerView mRecyclerView;
-    private AdaptadorItem miAdaptador;
+    private AdaptadorItemParaNuevoPedido miAdaptador;
 
     private ArrayList<Plato>  listaDataSetCompleta;
-
     private ArrayList<Plato> listaCompleta;
-    private Context context;
 
+    private String[] listaCantidades;
 
+    private Button botonAceptar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_items);
 
-
         context = this;
+
+        //mostramos el boton: Aceptar selección de platos"
+        botonAceptar = findViewById(R.id.buttonAceptarSeleccionPlatos);
+        botonAceptar.setVisibility(View.VISIBLE);
 
         //define la flecha para volver en la actionBar
         ActionBar actionBar = getSupportActionBar();
@@ -72,77 +79,34 @@ public class ListaItems extends AppCompatActivity implements AdaptadorItem.Callb
         listaCompleta = new ArrayList<>();
 
         //set adapter to recyclerview
-        miAdaptador = new AdaptadorItem(listaCompleta, context);
+        miAdaptador = new AdaptadorItemParaNuevoPedido(listaCompleta, context);
         mRecyclerView.setAdapter(miAdaptador);
         miAdaptador.notifyDataSetChanged();
 
-        ItemTouchHelper.SimpleCallback simpleCallback =
-                new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT |ItemTouchHelper.RIGHT, ListaItems.this);
+        botonAceptar = findViewById(R.id.buttonAceptarSeleccionPlatos);
+        botonAceptar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listaCantidades = miAdaptador.getListaCantidades();
 
-        new ItemTouchHelper(simpleCallback).attachToRecyclerView(mRecyclerView);
+                ArrayList<ItemPedido> itemsPedido = new ArrayList<>();
 
-        //registramos el broadcast receiver y le asignamos un intentFilter
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(MyIntentService.ACTION_FIN);
-        MyReceiver rcv = new MyReceiver();
-        registerReceiver(rcv, filter);
+                for (int i=0; i<listaCantidades.length; i++){
+                    if (listaCantidades[i]!="0") {
+                        ItemPedido itemPedido = new ItemPedido();
+                        itemPedido.setPlato(listaCompleta.get(i));
+                        itemPedido.setCantidad(Integer.parseInt(listaCantidades[i]));
+                        itemsPedido.add(itemPedido);
+                    }
+                }
+                Intent i = new Intent(context, NuevoPedido.class);
+                i.putExtra("itemsPedido", itemsPedido );
+                startActivity(i);
+            }
+        });
     }
 
-    //https://codeday.me/es/qa/20190803/1176380.html
-    @Override
-    public void onHandleSelection(int position, ArrayList<Plato> listaPlatos) {
-        //cuando se llama la función desde el adaptador creamos el intent con los datos y lo pasamos a la actividad
-        //NuevoItem para editar el plato
-        Intent i = new Intent(this, NuevoItem.class);
-        i.putExtra("fila", position);
-        i.putExtra("listaPlatos", listaPlatos);
-        startActivity(i);
-    }
 
-    @Override
-    public void onSwipe(RecyclerView.ViewHolder viewHolder, int direction, int position) {
-        if(viewHolder instanceof AdaptadorItem.ItemViewHolder){
-            if (direction==ItemTouchHelper.LEFT)
-            miAdaptador.eliminarPlato(viewHolder.getAdapterPosition());
-            else
-                miAdaptador.editarPlato(viewHolder.getAdapterPosition());
-        }
-    }
-
-    public class MyReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Plato plato = (Plato) intent.getSerializableExtra("plato");
-            Intent destino = new Intent(context, NuevoItem.class);
-            destino.putExtra("plato", plato);
-            destino.setAction("0"); //necesario accion ficticia para que se envien los datos agregados en el intent (plato)
-
-            int dummyuniqueInt = new Random().nextInt(543254);
-            //al pendingIntent le pasamos un numero aleatorio para que interprete cada PendingIntent como uno distinto y no envie los mismos
-            //extras (mismo plato) al enviar varias notificaciones ya que no interpreta el cambio en los extras como un intent distinto y siempre
-            //devuelve un puntero al primer intent enviado
-            PendingIntent pendingIntent =
-                    PendingIntent.getActivity(context,dummyuniqueInt , destino, PendingIntent.FLAG_UPDATE_CURRENT);
-
-
-            NotificationCompat.Builder mBuilder =
-                    new NotificationCompat.Builder(context, CATEGORY_PROMO)
-                            .setSmallIcon(R.drawable.ic_sentiment_very_satisfied)
-                            .setContentTitle("Super oferta!!")
-                            .setContentText("Solo por 10 minutos! 20% de descuento en " + plato.getTitulo())
-                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                            .setContentIntent(pendingIntent)
-                            .setAutoCancel(true);
-
-            NotificationManagerCompat notificationManager =
-                    NotificationManagerCompat.from(context);
-            notificationManager.notify(new Random().nextInt(543254), mBuilder.build());
-            //usamos un numero aleatorio para que se interprete como notificaciones distintas y no reescriba la primera si se envian varias
-            //faltaría agruparlas!
-
-        }
-    }
 
     Handler miHandler = new Handler(Looper.myLooper()){
         @Override
@@ -154,13 +118,27 @@ public class ListaItems extends AppCompatActivity implements AdaptadorItem.Callb
                     //solo al momento de tener la lista de platos desde el servidor la seteamos en pantalla
                     listaCompleta.addAll(listaDataSetCompleta);
                     miAdaptador.notifyDataSetChanged();
+                    miAdaptador.setTamanioListaCantidades(listaCompleta.size());
                     break;
 
                 case PlatoRepository._BUSQUEDA_PLATO:
                     ArrayList<Plato> listaDataSetBusqueda = PlatoRepository.getInstance().getListaPlatosBusqueda();
                     if(!listaDataSetBusqueda.isEmpty()) {
-                        Intent i2 = new Intent(context, ListaBusqueda.class);
+                        Intent i2 = new Intent(context, ListaBusquedaParaNuevoPedido.class);
                         i2.putExtra("platos", listaDataSetBusqueda);
+                        //enviamos la lista de listaCantidades para seguir mostrando las cantidades que ya seleccionó
+                        listaCantidades = miAdaptador.getListaCantidades();
+
+                        for (int i=0; i<listaDataSetBusqueda.size(); i++){
+                            for (int j=0; j<listaCompleta.size(); j++) {
+                                if (!listaCompleta.get(j).equals(listaDataSetBusqueda.get(i))) {
+                                    for (int k = 0; k < listaCantidades.length; k++) {
+                                        listaCantidades[k] = listaCantidades[k + 1];
+                                    }
+                                }
+                            }
+                        }
+                        i2.putExtra("listaCantidades", listaCantidades);
                         startActivity(i2);
                     }
                     else {
@@ -174,11 +152,9 @@ public class ListaItems extends AppCompatActivity implements AdaptadorItem.Callb
                         dialog.show();
                     }
 
-
                 case PlatoRepository._ERROR_PLATO:
 
                     break;
-
             }
         }
     };
@@ -195,8 +171,7 @@ public class ListaItems extends AppCompatActivity implements AdaptadorItem.Callb
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
-                Intent i3 = new Intent(this, Home.class);
-                startActivity(i3);
+                onBackPressed();
                 return true;
             case R.id.action_buscar_item:
                 // Get the layout inflater
@@ -250,7 +225,7 @@ public class ListaItems extends AppCompatActivity implements AdaptadorItem.Callb
                                         //para cancelar no hace falta hacer nada, por default se cierra la ventana de dialogo
                                     }
                                 })
-                .setView(v);
+                        .setView(v);
 
                 //Obtener una instancia de cuadro de dialogo
                 AlertDialog dialog = builder.create();
@@ -262,5 +237,6 @@ public class ListaItems extends AppCompatActivity implements AdaptadorItem.Callb
         }
         return super.onOptionsItemSelected(item);
     }
+
 
 }

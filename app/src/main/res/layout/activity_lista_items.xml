@@ -4,11 +4,45 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ListaItems"
+
     android:background="@drawable/fondo_inicio_sin_letras">
+
+    <TextView
+        android:id="@+id/textViewTituloResultadoDeBusqueda"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:paddingVertical="8dp"
+        android:text="Resultados de búsqueda"
+        android:textColor="@color/colorLetra"
+        android:textSize="20dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/reciclerViewListaItems"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/reciclerViewListaItems"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonAceptarSeleccionPlatos"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTituloResultadoDeBusqueda" />
+
+    <Button
+        android:id="@+id/buttonAceptarSeleccionPlatos"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="16dp"
+        android:text="Aceptar"
+        android:textSize="@dimen/text_view_ingreso_valores"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

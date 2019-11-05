@@ -18,4 +18,9 @@
         android:title="Lista Items"
         android:icon="@drawable/lista_itemss"
         app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_crear_pedido"
+        android:title="Crear Pedido"
+        android:icon="@drawable/ic_add_shopping_cart"
+        app:showAsAction="always"/>
 </menu>

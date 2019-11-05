@@ -46,4 +46,11 @@
     <string name="precio_nuevo_item">Precio</string>
     <string name="calorias_nuevo_item">Calorías</string>
     <string name="boton_crear_nuevo_item">Guardar</string>
+
+    <!-- nuevo pedido -->
+    <string name="titulo_pantalla_nuevo_pedido">Crear nuevo pedido</string>
+    <string name="boton_seleccionar_ubicacion">Seleccionar ubicación</string>
+    <string name="boton_seleccionar_platos">Seleccionar platos</string>
+    <string name="boton_crear_pedido">Crear pedido</string>
+    <string name="boton_enviar_pedido">Enviar pedido</string>
 </resources>

@@ -3,24 +3,14 @@ package frsf.isi.dam.delaiglesia.sendmeal;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -32,15 +22,12 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import frsf.isi.dam.delaiglesia.sendmeal.Auxiliares.RecyclerItemTouchHelper;
-import frsf.isi.dam.delaiglesia.sendmeal.Dao.PlatoRepository;
 import frsf.isi.dam.delaiglesia.sendmeal.domain.Plato;
-import io.apptik.widget.MultiSlider;
 
 import static android.app.Notification.CATEGORY_PROMO;
 
 public class ListaBusqueda extends AppCompatActivity implements AdaptadorItem.CallbackInterface, RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
-    private static final int CODIGO_EDITAR_ITEM = 20;
     private RecyclerView mRecyclerView;
     private AdaptadorItem miAdaptador;
     private ArrayList<Plato> lista;
@@ -58,6 +45,10 @@ public class ListaBusqueda extends AppCompatActivity implements AdaptadorItem.Ca
         //define la flecha para volver en la actionBar
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        //mostramos el subtitulo: "Resultados de búsqueda"
+        TextView subtitulo = findViewById(R.id.textViewTituloResultadoDeBusqueda);
+        subtitulo.setVisibility(View.VISIBLE);
 
         //getting the recyclerview from xml
         mRecyclerView = (RecyclerView) findViewById(R.id.reciclerViewListaItems);
@@ -82,29 +73,16 @@ public class ListaBusqueda extends AppCompatActivity implements AdaptadorItem.Ca
         MyReceiver rcv = new MyReceiver();
         registerReceiver(rcv, filter);
     }
-/*
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        // Nos fijamos de que actividad viene el resultado
-        if (requestCode == CODIGO_EDITAR_ITEM) {
-            // Verificamos que el request tuvo éxito
-            if (resultCode == RESULT_OK) {
-                //luego de la edición del plato en la actividad NuevoItem actualizamos la lista
-                miAdaptador.notifyDataSetChanged();
-            }
-        }
-    }*/
 
     //https://codeday.me/es/qa/20190803/1176380.html
     @Override
     public void onHandleSelection(int position, ArrayList<Plato> listaPlatos) {
         //cuando se llama la función desde el adaptador creamos el intent con los datos y lo pasamos a la actividad
         //NuevoItem para editar el plato
-        Intent i = new Intent(this, Nuevo_item.class);
+        Intent i = new Intent(this, NuevoItem.class);
         i.putExtra("fila", position);
         i.putExtra("listaPlatos", listaPlatos);
-        startActivityForResult(i, CODIGO_EDITAR_ITEM);
+        startActivity(i);
     }
 
     @Override
@@ -122,7 +100,7 @@ public class ListaBusqueda extends AppCompatActivity implements AdaptadorItem.Ca
         @Override
         public void onReceive(Context context, Intent intent) {
             Plato plato = (Plato) intent.getSerializableExtra("plato");
-            Intent destino = new Intent(context, Nuevo_item.class);
+            Intent destino = new Intent(context, NuevoItem.class);
             destino.putExtra("plato", plato);
             destino.setAction("0"); //necesario accion ficticia para que se envien los datos agregados en el intent (plato)
 
@@ -151,22 +129,6 @@ public class ListaBusqueda extends AppCompatActivity implements AdaptadorItem.Ca
 
         }
     }
-
-    Handler miHandler = new Handler(Looper.myLooper()){
-        @Override
-        public void handleMessage(Message msg) {
-
-            switch (msg.arg1 ) {
-                case PlatoRepository._BORRADO_PLATO:
-                    //accion eliminar
-                    break;
-
-                case PlatoRepository._ERROR_PLATO:
-
-                    break;
-            }
-        }
-    };
 
 
 

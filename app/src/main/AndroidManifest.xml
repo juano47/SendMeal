@@ -12,15 +12,18 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning"
-        android:usesCleartextTraffic="true" > <!-- esto es necesario a partir del API 28, dado que en esta versión del API se
-                                                deshabilita por defecto el uso de HTTP, y solo se permite usar HTTPS -->
-
-
-
-        <activity android:name=".ListaItems"></activity>
-        <activity android:name=".ListaBusqueda"></activity>
-        <activity android:name=".Nuevo_item" />
+        android:usesCleartextTraffic="true"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".NuevoPedido.ListaBusquedaParaNuevoPedido"></activity>
+        <activity android:name=".NuevoPedido.ListaItemsParaNuevoPedido" />
+        <activity android:name=".NuevoPedido.NuevoPedido" />
+        <!--
+         esto es necesario a partir del API 28, dado que en esta versión del API se
+                                                deshabilita por defecto el uso de HTTP, y solo se permite usar HTTPS
+        -->
+        <activity android:name=".ListaItems" />
+        <activity android:name=".ListaBusqueda" />
+        <activity android:name=".NuevoItem" />
         <activity
             android:name=".Home"
             android:screenOrientation="portrait"
@@ -36,7 +39,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
-        <service android:name=".MyIntentService"></service>
+        <service android:name=".MyIntentService" />
     </application>
 
 </manifest>

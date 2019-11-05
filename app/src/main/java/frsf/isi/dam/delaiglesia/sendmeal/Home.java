@@ -3,22 +3,17 @@ package frsf.isi.dam.delaiglesia.sendmeal;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-import frsf.isi.dam.delaiglesia.sendmeal.domain.Plato;
+import frsf.isi.dam.delaiglesia.sendmeal.NuevoPedido.NuevoPedido;
 
 public class Home extends AppCompatActivity {
 
     private static final int CODIGO_CREAR_ITEM = 10;
+    private static final int CODIGO_CREAR_PEDIDO = 20;
 
    //public static List<Plato> _PLATOS = new ArrayList<>();
 
@@ -42,12 +37,16 @@ public class Home extends AppCompatActivity {
                 startActivity(i1);
                 return true;
             case R.id.action_crear_item:
-                Intent i2 = new Intent(this,Nuevo_item.class);
+                Intent i2 = new Intent(this, NuevoItem.class);
                 startActivityForResult(i2,CODIGO_CREAR_ITEM);
                 return true;
             case R.id.action_ver_lista:
                 Intent i3 = new Intent(this, ListaItems.class);
                 startActivity(i3);
+                return true;
+            case R.id.action_crear_pedido:
+                Intent i4 = new Intent(this, NuevoPedido.class);
+                startActivityForResult(i4,CODIGO_CREAR_PEDIDO);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

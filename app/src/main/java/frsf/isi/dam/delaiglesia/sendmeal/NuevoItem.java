@@ -3,7 +3,7 @@ package frsf.isi.dam.delaiglesia.sendmeal;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import android.app.Activity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,12 +22,11 @@ import com.google.android.material.textfield.TextInputLayout;
 
 
 import java.util.ArrayList;
-import java.util.List;
 
 import frsf.isi.dam.delaiglesia.sendmeal.Dao.PlatoRepository;
 import frsf.isi.dam.delaiglesia.sendmeal.domain.Plato;
 
-public class Nuevo_item extends AppCompatActivity {
+public class NuevoItem extends AppCompatActivity {
 
     private TextInputLayout til_idPlato;
     private TextInputLayout til_nombrePlato;
@@ -239,7 +238,7 @@ public class Nuevo_item extends AppCompatActivity {
 
             switch (msg.arg1 ){
                 case PlatoRepository._UPDATE_PLATO:
-                    Intent i = new Intent(Nuevo_item.this,ListaItems.class);
+                    Intent i = new Intent(NuevoItem.this,ListaItems.class);
                     startActivity(i);
                     break;
             }

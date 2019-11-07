@@ -70,8 +70,14 @@ public class NuevoPedido extends AppCompatActivity {
             Double total = 0.00;
             for (int i = 0; i < itemsPedido.size(); i++) {
 
-                TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.item_tabla_resumen_pedido, null);
+                final TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.item_tabla_resumen_pedido, null);
 
+                row.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Log.e("",  ((TextView) row.findViewById(R.id.idNombreProducto)).getText().toString());
+                    }
+                });
                 ((TextView) row.findViewById(R.id.idNombreProducto)).setText(itemsPedido.get(i).getPlato().getTitulo());
                 ((TextView) row.findViewById(R.id.idCantidadProducto)).setText(itemsPedido.get(i).getCantidad().toString());
                 Double precio = itemsPedido.get(i).getPlato().getPrecio();
@@ -164,7 +170,7 @@ public class NuevoPedido extends AppCompatActivity {
         protected Void doInBackground(Pedido... pedidos) {
             PedidoDao dao = DBPedido.getInstance(NuevoPedido.this).getSendMealDB().pedidoDao();
             ArrayList<Pedido> listaPedidos = (ArrayList<Pedido>) dao.getAll();
-            
+
             /*if(pedidos[0].getId() != null && pedidos[0].getId() >0) {
                 dao.actualizar(pedidos[0]);
             }else {

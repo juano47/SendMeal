@@ -40,13 +40,17 @@ public class Home extends AppCompatActivity {
                 Intent i2 = new Intent(this, NuevoItem.class);
                 startActivityForResult(i2,CODIGO_CREAR_ITEM);
                 return true;
-            case R.id.action_ver_lista:
+            case R.id.action_ver_lista_platos:
                 Intent i3 = new Intent(this, ListaItems.class);
                 startActivity(i3);
                 return true;
+            case R.id.action_ver_lista_pedidos:
+                Intent i4 = new Intent(this, ListaPedidos.class);
+                startActivity(i4);
+                return true;
             case R.id.action_crear_pedido:
-                Intent i4 = new Intent(this, NuevoPedido.class);
-                startActivityForResult(i4,CODIGO_CREAR_PEDIDO);
+                Intent i5 = new Intent(this, NuevoPedido.class);
+                startActivityForResult(i5,CODIGO_CREAR_PEDIDO);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

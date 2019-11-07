@@ -3,8 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_registrarse"
-        android:title="@string/action_registrarme"
+    android:id="@+id/action_registrarse"
+    android:title="@string/action_registrarme"
+    app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_ver_lista_pedidos"
+        android:title="Pedidos realizados"
         app:showAsAction="never" />
 
     <item
@@ -14,7 +19,7 @@
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/action_ver_lista"
+        android:id="@+id/action_ver_lista_platos"
         android:title="Lista Items"
         android:icon="@drawable/lista_itemss"
         app:showAsAction="always"/>

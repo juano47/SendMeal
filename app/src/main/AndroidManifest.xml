@@ -14,7 +14,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".NuevoPedido.ListaBusquedaParaNuevoPedido"></activity>
+        <activity android:name=".ListaPedidos"></activity>
+        <activity android:name=".DetallePedido" />
+        <activity android:name=".NuevoPedido.ListaBusquedaParaNuevoPedido" />
         <activity android:name=".NuevoPedido.ListaItemsParaNuevoPedido" />
         <activity android:name=".NuevoPedido.NuevoPedido" />
         <!--

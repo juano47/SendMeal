@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -24,6 +26,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.util.List;
 
+import frsf.isi.dam.delaiglesia.sendmeal.Auxiliares.ImageUtil;
 import frsf.isi.dam.delaiglesia.sendmeal.Dao.PlatoRepository;
 import frsf.isi.dam.delaiglesia.sendmeal.domain.Plato;
 
@@ -76,6 +79,9 @@ public class AdaptadorItem extends RecyclerView.Adapter<AdaptadorItem.ItemViewHo
     public void onBindViewHolder(ItemViewHolder holder, final int position) {
         holder.txtPlatoNombre.setText(platos.get(position).getTitulo());
         holder.txtPlatoPrecio.setText(Double.toString(platos.get(position).getPrecio()));
+        String stringFotoBase64 = platos.get(position).getFoto();
+        Bitmap bitmapFoto = ImageUtil.convert(stringFotoBase64);
+        holder.foto.setImageBitmap(bitmapFoto);
     }
 
     //Método necesario
@@ -98,6 +104,7 @@ public class AdaptadorItem extends RecyclerView.Adapter<AdaptadorItem.ItemViewHo
         TextView txtPlatoNombre;
         TextView txtPlatoPrecio;
         Button buttonOferta;
+        ImageView foto;
 
         public ConstraintLayout layoutMostrar;
         public ConstraintLayout layoutEditar;
@@ -109,6 +116,7 @@ public class AdaptadorItem extends RecyclerView.Adapter<AdaptadorItem.ItemViewHo
             txtPlatoNombre=view.findViewById(R.id.textViewNombrePlato);
             txtPlatoPrecio = view.findViewById(R.id.textViewPrecioPlato);
             buttonOferta = view.findViewById(R.id.buttonOferta);
+            foto = view.findViewById(R.id.imageViewFoto);
             layoutMostrar = view.findViewById(R.id.idLayoutMostrar);
             layoutEditar = view.findViewById(R.id.idLayoutEditar);
             layoutEliminar = view.findViewById(R.id.idLayoutEliminar);

@@ -1,5 +1,7 @@
 package frsf.isi.dam.delaiglesia.sendmeal.domain;
 
+import android.widget.ImageView;
+
 import java.io.Serializable;
 
 public class Plato implements Serializable {
@@ -9,14 +11,16 @@ public class Plato implements Serializable {
     private Double precio;
     private Integer calorias;
     private boolean enOferta;
+    private String foto;
 
-    public Plato(Integer id, String titulo, String descripcion, Double precio, Integer calorias, boolean enOferta) {
+    public Plato(Integer id, String titulo, String descripcion, Double precio, Integer calorias, boolean enOferta, String foto) {
         this.id = id;
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.precio = precio;
         this.calorias = calorias;
         this.enOferta = enOferta;
+        this.foto = foto;
     }
 
     public Plato() {
@@ -66,4 +70,12 @@ public class Plato implements Serializable {
     public boolean getEnOferta(){return enOferta;}
 
     public void setEnOferta(boolean enOferta) {this.enOferta = enOferta;}
+
+    public void setFoto(String foto) {
+        this.foto = foto;
+    }
+
+    public String getFoto() {
+        return  foto;
+    }
 }

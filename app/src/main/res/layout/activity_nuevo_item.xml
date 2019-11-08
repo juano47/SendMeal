@@ -10,35 +10,39 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="46dp">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-    <TextView
-        android:id="@+id/textView11"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="45dp"
-        android:layout_marginEnd="32dp"
-        android:text="@string/titulo_pantalla_nuevo_item"
-        android:textSize="@dimen/titulo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-        android:id="@+id/textView12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:text="@string/id_nuevo_item"
-        android:textSize="@dimen/text_view_ingreso_valores"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView11" />
+                android:id="@+id/textView11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="45dp"
+                android:layout_marginEnd="32dp"
+                android:text="@string/titulo_pantalla_nuevo_item"
+                android:textSize="@dimen/titulo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="32dp"
+                android:text="@string/id_nuevo_item"
+                android:textSize="@dimen/text_view_ingreso_valores"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_idPlato"
@@ -51,9 +55,9 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextIdPlato"
-                    android:inputType="number"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
@@ -78,10 +82,10 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextNombrePlato"
-                    android:maxLines="1"
-                    android:inputType="text"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
@@ -106,10 +110,10 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextDescripcionPlato"
-                    android:maxLines="1"
-                    android:inputType="text"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
@@ -134,9 +138,9 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextPrecioPlato"
-                    android:inputType="numberDecimal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
@@ -161,9 +165,9 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextCaloriasPlato"
-                    android:inputType="number"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton
@@ -171,16 +175,38 @@
                 style="@style/MyButtonTheme"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginEnd="32dp"
                 android:layout_marginBottom="16dp"
                 android:text="@string/boton_crear_nuevo_item"
                 android:textSize="@dimen/text_view_ingreso_valores"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/til_caloriasPlato"
-                app:layout_constraintTop_toBottomOf="@+id/til_caloriasPlato" />
+                app:layout_constraintTop_toBottomOf="@+id/imageViewFoto"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <Button
+                android:id="@+id/buttonAgregarFoto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:text="Agregar foto"
+                app:layout_constraintBottom_toBottomOf="@+id/imageViewFoto"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/imageViewFoto" />
+
+            <ImageView
+                android:id="@+id/imageViewFoto"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="24dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintStart_toEndOf="@+id/buttonAgregarFoto"
+                app:layout_constraintTop_toBottomOf="@+id/til_caloriasPlato"
+                app:srcCompat="@android:drawable/ic_menu_camera" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

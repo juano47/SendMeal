@@ -1,16 +1,21 @@
 package frsf.isi.dam.delaiglesia.sendmeal.domain;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
-@Entity
+@Entity(foreignKeys = @ForeignKey(entity = Pedido.class,
+        parentColumns = "id",
+        childColumns = "idpedido"))
 public class ItemPedido implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private Integer id;
+    @ColumnInfo(name = "idpedido")
     private Integer idPedido;
     @Ignore
     private Pedido pedido;

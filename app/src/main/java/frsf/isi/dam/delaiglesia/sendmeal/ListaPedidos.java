@@ -3,6 +3,7 @@ package frsf.isi.dam.delaiglesia.sendmeal;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import frsf.isi.dam.delaiglesia.sendmeal.Dao.ROOM.DBPedido;
 import frsf.isi.dam.delaiglesia.sendmeal.Dao.ROOM.PedidoDao;
+import frsf.isi.dam.delaiglesia.sendmeal.NuevoPedido.NuevoPedido;
 import frsf.isi.dam.delaiglesia.sendmeal.domain.Pedido;
 
 public class ListaPedidos extends AppCompatActivity {
@@ -39,13 +41,17 @@ public class ListaPedidos extends AppCompatActivity {
             @Override
             public void run() {
             for (int i = 0; i < listaPedidosDataset.size(); i++) {
-
+                final int k;
+                k=i;
                 final TableRow row = (TableRow) LayoutInflater.from(context).inflate(R.layout.item_tabla_resumen_pedido, null);
 
                 row.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Log.e("",  ((TextView) row.findViewById(R.id.idNombreProducto)).getText().toString());
+                        Intent i1 = new Intent(context, DetallePedido.class);
+                        i1.putExtra("pedido", listaPedidosDataset.get(k));
+                        startActivity(i1);
                     }
                 });
                 ((TextView) row.findViewById(R.id.idNombreProducto)).setText(listaPedidosDataset.get(i).getId().toString());

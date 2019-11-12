@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -96,6 +97,8 @@ public class ListaItemsParaNuevoPedido extends AppCompatActivity{
                         ItemPedido itemPedido = new ItemPedido();
                         itemPedido.setPlato(listaCompleta.get(i));
                         itemPedido.setCantidad(Integer.parseInt(listaCantidades[i]));
+                        itemPedido.setPrecio(listaCompleta.get(i).getPrecio());
+                        itemPedido.setIdPlato(listaCompleta.get(i).getId());
                         itemsPedido.add(itemPedido);
                     }
                 }
@@ -174,6 +177,9 @@ public class ListaItemsParaNuevoPedido extends AppCompatActivity{
                 onBackPressed();
                 return true;
             case R.id.action_buscar_item:
+
+                Toast.makeText(context, "No es posible realizar búsquedas en este momento. Intente más tarde",Toast.LENGTH_SHORT).show();
+                /*
                 // Get the layout inflater
                 LayoutInflater inflater = getLayoutInflater();
                 // Inflar y establecer el layout para el dialogo
@@ -233,7 +239,7 @@ public class ListaItemsParaNuevoPedido extends AppCompatActivity{
                 dialog.show();
 
 
-                return true;
+                return true;*/
         }
         return super.onOptionsItemSelected(item);
     }

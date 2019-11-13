@@ -7,6 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -23,8 +26,10 @@ import java.util.Date;
 import frsf.isi.dam.delaiglesia.sendmeal.Dao.ROOM.DBPedido;
 import frsf.isi.dam.delaiglesia.sendmeal.Dao.ROOM.ItemPedidoDao;
 import frsf.isi.dam.delaiglesia.sendmeal.Dao.ROOM.PedidoDao;
+import frsf.isi.dam.delaiglesia.sendmeal.Dao.Repository;
 import frsf.isi.dam.delaiglesia.sendmeal.Home;
 import frsf.isi.dam.delaiglesia.sendmeal.ListaItems;
+import frsf.isi.dam.delaiglesia.sendmeal.NuevoItem;
 import frsf.isi.dam.delaiglesia.sendmeal.R;
 import frsf.isi.dam.delaiglesia.sendmeal.domain.ItemPedido;
 import frsf.isi.dam.delaiglesia.sendmeal.domain.Pedido;
@@ -39,6 +44,8 @@ public class NuevoPedido extends AppCompatActivity {
     private Button botonEnviarPedido;
 
     private TextView txtTotal;
+
+    private Pedido pedido;
 
 
     @Override
@@ -56,6 +63,9 @@ public class NuevoPedido extends AppCompatActivity {
         botonSeleccionarPlatos = findViewById(R.id.buttonSeleccionarPlatos);
         botonCrearPedido = findViewById(R.id.buttonCrearPedido);
         botonEnviarPedido = findViewById(R.id.buttonEnviarPedido);
+
+        //deshabilitamos el boton "Enviar pedido" mientras no se haya guardado el pedido localmente
+        botonEnviarPedido.setEnabled(false);
 
         txtTotal =findViewById(R.id.idTotal);
         txtTotal.setText("");
@@ -124,7 +134,7 @@ public class NuevoPedido extends AppCompatActivity {
                 else {
 
                     //crear pedido
-                    Pedido pedido = new Pedido();
+                    pedido = new Pedido();
                     //seteamos los valores restantes de itemsPedido y creamos el pedido
                     pedido.setEstado(1);
                     pedido.setLat(0.0);
@@ -143,7 +153,14 @@ public class NuevoPedido extends AppCompatActivity {
                     GuardarPedido tareaGuardarPedido = new GuardarPedido();
                     tareaGuardarPedido.execute(pedido);
                 }
+            }
+        });
 
+        botonEnviarPedido.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Repository.getInstance().crearPedido(pedido, miHandler);
+                //finish();
             }
         });
     }
@@ -183,35 +200,26 @@ public class NuevoPedido extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
            // pedido = null;
+
             Toast.makeText(context, "Su pedido se ha creado con éxito!", Toast.LENGTH_LONG).show();
-            Intent i = new Intent(NuevoPedido.this, Home.class);
-            startActivity(i);
+            botonEnviarPedido.setEnabled(true);
         }
     }
 
-    class AllPedidos extends AsyncTask<Pedido, Void, Void> {
-
+    Handler miHandler = new Handler(Looper.myLooper()){
         @Override
-        protected Void doInBackground(Pedido... pedidos) {
-            PedidoDao dao = DBPedido.getInstance(NuevoPedido.this).getSendMealDB().pedidoDao();
-            ArrayList<Pedido> listaPedidos = (ArrayList<Pedido>) dao.getAll();
+        public void handleMessage(Message msg) {
+            Log.d("APP_2","Vuelve al handler"+msg.arg1);
 
-            /*if(pedidos[0].getId() != null && pedidos[0].getId() >0) {
-                dao.actualizar(pedidos[0]);
-            }else {
-                dao.insert(pedidos[0]);
-            }*/
-            return null;
+            switch (msg.arg1 ){
+                case Repository._ALTA_PEDIDO:
+                    Toast.makeText(context, "Su pedido se ha enviado al servidor con éxito!", Toast.LENGTH_LONG).show();
+                    Intent i = new Intent(NuevoPedido.this, Home.class);
+                    startActivity(i);
+                    break;
+            }
         }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            // pedido = null;
-            //Intent i = new Intent(NuevoPedido.this, ObraListActivity.class);
-            // startActivity(i);
-        }
-    }
+    };
 
     //flecha volver en la actionbar
     @Override

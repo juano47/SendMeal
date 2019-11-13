@@ -1,10 +1,8 @@
 package frsf.isi.dam.delaiglesia.sendmeal;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -19,12 +17,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import frsf.isi.dam.delaiglesia.sendmeal.Dao.PlatoRepository;
+import frsf.isi.dam.delaiglesia.sendmeal.Dao.Repository;
 import frsf.isi.dam.delaiglesia.sendmeal.domain.Plato;
 
 
@@ -145,7 +141,7 @@ public class AdaptadorItem extends RecyclerView.Adapter<AdaptadorItem.ItemViewHo
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dlgInt, int i) {
-                                PlatoRepository.getInstance().borrarPlato(platos.get(fila), miHandler);
+                                Repository.getInstance().borrarPlato(platos.get(fila), miHandler);
 
                             }
                         })
@@ -165,14 +161,14 @@ public class AdaptadorItem extends RecyclerView.Adapter<AdaptadorItem.ItemViewHo
         public void handleMessage(Message msg) {
 
             switch (msg.arg1 ) {
-                case PlatoRepository._BORRADO_PLATO:
+                case Repository._BORRADO_PLATO:
                     //accion eliminar
                     platos.remove(fila2);
                     notifyItemRemoved(fila2);
 
                     break;
 
-                case PlatoRepository._ERROR_PLATO:
+                case Repository._ERROR_PLATO:
 
                     break;
 

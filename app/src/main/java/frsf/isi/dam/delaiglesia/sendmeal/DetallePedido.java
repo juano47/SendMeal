@@ -1,16 +1,13 @@
 package frsf.isi.dam.delaiglesia.sendmeal;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -18,12 +15,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import frsf.isi.dam.delaiglesia.sendmeal.Dao.PlatoRepository;
+import frsf.isi.dam.delaiglesia.sendmeal.Dao.Repository;
 import frsf.isi.dam.delaiglesia.sendmeal.Dao.ROOM.DBPedido;
 import frsf.isi.dam.delaiglesia.sendmeal.Dao.ROOM.ItemPedidoDao;
-import frsf.isi.dam.delaiglesia.sendmeal.Dao.ROOM.PedidoDao;
-import frsf.isi.dam.delaiglesia.sendmeal.NuevoPedido.ListaBusquedaParaNuevoPedido;
-import frsf.isi.dam.delaiglesia.sendmeal.NuevoPedido.NuevoPedido;
 import frsf.isi.dam.delaiglesia.sendmeal.domain.ItemPedido;
 import frsf.isi.dam.delaiglesia.sendmeal.domain.Pedido;
 import frsf.isi.dam.delaiglesia.sendmeal.domain.Plato;
@@ -135,7 +129,7 @@ public class DetallePedido extends AppCompatActivity {
                 listaItemsPedidoDataset = dao.getAll(pedido.getId());
                 Log.e("tamaño listaaa", String.valueOf(listaItemsPedidoDataset.size()));
                 //solicitamos la lista de platos guardada en el servidor
-                PlatoRepository.getInstance().listarPlatos(miHandler);
+                Repository.getInstance().listarPlatos(miHandler);
 
 
             }
@@ -149,13 +143,13 @@ public class DetallePedido extends AppCompatActivity {
         public void handleMessage(Message msg) {
 
             switch (msg.arg1 ) {
-                case PlatoRepository._CONSULTA_PLATO:
-                    listaDataSetPlatos = PlatoRepository.getInstance().getListaPlatosCompleta();
+                case Repository._CONSULTA_PLATO:
+                    listaDataSetPlatos = Repository.getInstance().getListaPlatosCompleta();
                     Log.e("0", "entra");
                     runOnUiThread(hiloUpdateLista);
                     break;
 
-                case PlatoRepository._ERROR_PLATO:
+                case Repository._ERROR_PLATO:
                     Log.e("1", "se va por error");
                     break;
             }

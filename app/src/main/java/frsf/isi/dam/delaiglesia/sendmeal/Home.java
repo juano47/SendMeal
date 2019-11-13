@@ -1,5 +1,6 @@
 package frsf.isi.dam.delaiglesia.sendmeal;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -14,6 +15,7 @@ public class Home extends AppCompatActivity {
 
     private static final int CODIGO_CREAR_ITEM = 10;
     private static final int CODIGO_CREAR_PEDIDO = 20;
+    private static Context context;
 
    //public static List<Plato> _PLATOS = new ArrayList<>();
 
@@ -21,6 +23,7 @@ public class Home extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        context = this;
     }
 
     @Override
@@ -55,6 +58,10 @@ public class Home extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public static Context getContext(){
+        return context;
     }
 
 }

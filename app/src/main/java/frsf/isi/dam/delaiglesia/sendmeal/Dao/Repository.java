@@ -2,15 +2,14 @@ package frsf.isi.dam.delaiglesia.sendmeal.Dao;
 
 import android.os.Handler;
 import android.os.Message;
-import android.text.Editable;
 import android.util.Log;
-import android.widget.TextView;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import frsf.isi.dam.delaiglesia.sendmeal.Dao.Rest.PedidoRest;
 import frsf.isi.dam.delaiglesia.sendmeal.Dao.Rest.PlatoRest;
+import frsf.isi.dam.delaiglesia.sendmeal.domain.Pedido;
 import frsf.isi.dam.delaiglesia.sendmeal.domain.Plato;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -18,11 +17,12 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class PlatoRepository {
+public class Repository {
 
     public static String _SERVER = "http://192.168.0.131:5000/";
     private ArrayList<Plato> listaPlatosCompleta;
     private ArrayList<Plato> listaPlatosBusqueda;
+    private ArrayList<Pedido> listaPedidos;
 
     public static final int _ALTA_PLATO =1;
     public static final int _UPDATE_PLATO =2;
@@ -30,17 +30,20 @@ public class PlatoRepository {
     public static final int _CONSULTA_PLATO =4; //TODOS LOS PLATOS
     public static final int _BUSQUEDA_PLATO =5; //búsqueda de platos en base a filtros
     public static final int _ERROR_PLATO =9;
+    public static final int _ALTA_PEDIDO=10;
+    public static final int _ERROR_PEDIDO=19;
 
-    private static PlatoRepository _INSTANCE;
+    private static Repository _INSTANCE;
 
-    private PlatoRepository(){}
+    private Repository(){}
 
-    public static PlatoRepository getInstance(){
+    public static Repository getInstance(){
         if(_INSTANCE==null){
-            _INSTANCE = new PlatoRepository();
+            _INSTANCE = new Repository();
             _INSTANCE.configurarRetrofit();
             _INSTANCE.listaPlatosCompleta = new ArrayList<>();
             _INSTANCE.listaPlatosBusqueda = new ArrayList<>();
+            _INSTANCE.listaPedidos = new ArrayList<>();
         }
         return _INSTANCE;
     }
@@ -48,6 +51,7 @@ public class PlatoRepository {
     private Retrofit rf;
 
     private PlatoRest platoRest;
+    private PedidoRest pedidoRest;
 
     private void configurarRetrofit(){
         this.rf = new Retrofit.Builder()
@@ -57,6 +61,7 @@ public class PlatoRepository {
         Log.d("APP","INSTANCIA CREADA");
 
         this.platoRest = this.rf.create(PlatoRest.class);
+        this.pedidoRest = this.rf.create(PedidoRest.class);
     }
 
     public void crearPlato(Plato o, final Handler h){
@@ -201,5 +206,35 @@ public class PlatoRepository {
                 h.sendMessage(m);
             }
         });
+    }
+
+    //***********Pedidos*******************
+
+    public void crearPedido(Pedido o, final Handler h){
+        Call<Pedido> llamada = this.pedidoRest.crear(o);
+        llamada.enqueue(new Callback<Pedido>() {
+            @Override
+            public void onResponse(Call<Pedido> call, Response<Pedido> response) {
+                Log.d("APP_2","Despues que ejecuta"+ response.isSuccessful());
+                Log.d("APP_2","Codigo"+ response.code());
+
+                if(response.isSuccessful()){
+                    Log.d("APP_2","EJECUTO");
+                    listaPedidos.add(response.body());
+                    Message m = new Message();
+                    m.arg1 = _ALTA_PEDIDO;
+                    h.sendMessage(m);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Pedido> call, Throwable t) {
+                Log.d("APP_2","ERROR "+t.getMessage());
+                Message m = new Message();
+                m.arg1 = _ERROR_PEDIDO;
+                h.sendMessage(m);
+            }
+        });
+
     }
 }

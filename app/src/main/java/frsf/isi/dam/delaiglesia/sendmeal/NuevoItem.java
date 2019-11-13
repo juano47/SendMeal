@@ -23,8 +23,10 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 
-import frsf.isi.dam.delaiglesia.sendmeal.Dao.PlatoRepository;
+import frsf.isi.dam.delaiglesia.sendmeal.Dao.Repository;
 import frsf.isi.dam.delaiglesia.sendmeal.domain.Plato;
+
+import static java.lang.Thread.sleep;
 
 public class NuevoItem extends AppCompatActivity {
 
@@ -216,13 +218,13 @@ public class NuevoItem extends AppCompatActivity {
                     //verificamos si se llamo la actividad desde la lista comprobando si fila!=null en el getIntent
                     if ( getIntent().getSerializableExtra("fila")!=null){
 
-                        PlatoRepository.getInstance().actualizarPlato(plato, miHandler);
+                        Repository.getInstance().actualizarPlato(plato, miHandler);
 
                     }
                     //si se llamo desde Home:
                     else{
-                        PlatoRepository.getInstance().crearPlato(plato, miHandler);
-                        finish();
+                        Repository.getInstance().crearPlato(plato, miHandler);
+                        //finish();
                     }
                 }
                 else
@@ -235,11 +237,17 @@ public class NuevoItem extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             Log.d("APP_2","Vuelve al handler"+msg.arg1);
-
+//esto realmente se usa
             switch (msg.arg1 ){
-                case PlatoRepository._UPDATE_PLATO:
+                case Repository._UPDATE_PLATO:
+                    Toast.makeText(NuevoItem.this, "El plato se actualizó con éxito!", Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(NuevoItem.this,ListaItems.class);
                     startActivity(i);
+                    break;
+                case Repository._ALTA_PLATO:
+                    Toast.makeText(NuevoItem.this, "El plato se creó con éxito!", Toast.LENGTH_SHORT).show();
+                    Intent i2 = new Intent(NuevoItem.this,Home.class);
+                    startActivity(i2);
                     break;
             }
         }

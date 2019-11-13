@@ -31,7 +31,7 @@ import java.util.Random;
 
 
 import frsf.isi.dam.delaiglesia.sendmeal.Auxiliares.RecyclerItemTouchHelper;
-import frsf.isi.dam.delaiglesia.sendmeal.Dao.PlatoRepository;
+import frsf.isi.dam.delaiglesia.sendmeal.Dao.Repository;
 import frsf.isi.dam.delaiglesia.sendmeal.domain.Plato;
 import io.apptik.widget.MultiSlider;
 
@@ -62,7 +62,7 @@ public class ListaItems extends AppCompatActivity implements AdaptadorItem.Callb
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         //solicitamos la lista de platos guardada en el servidor
-        PlatoRepository.getInstance().listarPlatos(miHandler);
+        Repository.getInstance().listarPlatos(miHandler);
 
         //getting the recyclerview from xml
         mRecyclerView = (RecyclerView) findViewById(R.id.reciclerViewListaItems);
@@ -149,15 +149,15 @@ public class ListaItems extends AppCompatActivity implements AdaptadorItem.Callb
         public void handleMessage(Message msg) {
 
             switch (msg.arg1 ) {
-                case PlatoRepository._CONSULTA_PLATO:
-                    listaDataSetCompleta = PlatoRepository.getInstance().getListaPlatosCompleta();
+                case Repository._CONSULTA_PLATO:
+                    listaDataSetCompleta = Repository.getInstance().getListaPlatosCompleta();
                     //solo al momento de tener la lista de platos desde el servidor la seteamos en pantalla
                     listaCompleta.addAll(listaDataSetCompleta);
                     miAdaptador.notifyDataSetChanged();
                     break;
 
-                case PlatoRepository._BUSQUEDA_PLATO:
-                    ArrayList<Plato> listaDataSetBusqueda = PlatoRepository.getInstance().getListaPlatosBusqueda();
+                case Repository._BUSQUEDA_PLATO:
+                    ArrayList<Plato> listaDataSetBusqueda = Repository.getInstance().getListaPlatosBusqueda();
                     if(!listaDataSetBusqueda.isEmpty()) {
                         Intent i2 = new Intent(context, ListaBusqueda.class);
                         i2.putExtra("platos", listaDataSetBusqueda);
@@ -175,7 +175,7 @@ public class ListaItems extends AppCompatActivity implements AdaptadorItem.Callb
                     }
 
 
-                case PlatoRepository._ERROR_PLATO:
+                case Repository._ERROR_PLATO:
 
                     break;
 
@@ -239,7 +239,7 @@ public class ListaItems extends AppCompatActivity implements AdaptadorItem.Callb
                                         String nombre = txtnombre.getText().toString();
                                         Double min = Double.valueOf(txtmin.getText().toString());
                                         Double max = Double.valueOf(txtmax.getText().toString());
-                                        PlatoRepository.getInstance().buscarPlatos(nombre, min , max, miHandler);
+                                        Repository.getInstance().buscarPlatos(nombre, min , max, miHandler);
 
                                     }
                                 })

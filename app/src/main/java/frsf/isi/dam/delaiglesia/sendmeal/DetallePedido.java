@@ -2,12 +2,15 @@ package frsf.isi.dam.delaiglesia.sendmeal;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -32,6 +35,7 @@ public class DetallePedido extends AppCompatActivity {
     private TextView idPedido;
     private TextView fechaPedido;
     private TextView estadoPedido;
+    private Button buttonnVerUbicacionPedido;
     private Pedido pedido;
     TableLayout table;
     private TextView txtTotal;
@@ -117,6 +121,17 @@ public class DetallePedido extends AppCompatActivity {
                     table.addView(row);
                 }
                 txtTotal.setText("$ " + String.valueOf(total));
+
+                //Boton "Ver ubicación del pedido"
+                buttonnVerUbicacionPedido = findViewById(R.id.buttonVerUbicacionPedido);
+                buttonnVerUbicacionPedido.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent i = new Intent(DetallePedido.this,MapsActivity.class);
+                        i.putExtra("pedido", pedido);
+                        startActivity(i);
+                    }
+                });
             }
         };
 
@@ -136,6 +151,8 @@ public class DetallePedido extends AppCompatActivity {
         };
         Thread t1 = new Thread(cargarPlatos);
         t1.start();
+
+
     }
 
     Handler miHandler = new Handler(Looper.myLooper()){

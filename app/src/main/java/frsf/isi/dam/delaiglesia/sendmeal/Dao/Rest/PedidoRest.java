@@ -23,5 +23,5 @@ public interface PedidoRest {
     Call<Pedido> actualizar(@Path("id") Integer id, @Body Pedido pedido);
 
     @POST("pedidos/")
-    Call<Pedido  > crear(@Body Pedido pedido);
+    Call<Pedido> crear(@Body Pedido pedido);
 }

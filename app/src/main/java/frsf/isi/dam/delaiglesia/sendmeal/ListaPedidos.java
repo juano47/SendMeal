@@ -61,7 +61,7 @@ public class ListaPedidos extends AppCompatActivity {
             }
             }
         };
-        final Runnable cargarObras = new Runnable() {
+        final Runnable cargarPedidos = new Runnable() {
             @Override
             public void run() {
                 PedidoDao dao = DBPedido.getInstance(ListaPedidos.this).getSendMealDB().pedidoDao();
@@ -69,7 +69,7 @@ public class ListaPedidos extends AppCompatActivity {
                 runOnUiThread(hiloUpdateLista);
             }
         };
-        Thread t1 = new Thread(cargarObras);
+        Thread t1 = new Thread(cargarPedidos);
         t1.start();
     }
 }

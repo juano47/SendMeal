@@ -1,5 +1,6 @@
 package frsf.isi.dam.delaiglesia.sendmeal.NuevoPedido;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -29,6 +30,7 @@ import frsf.isi.dam.delaiglesia.sendmeal.Dao.ROOM.PedidoDao;
 import frsf.isi.dam.delaiglesia.sendmeal.Dao.Repository;
 import frsf.isi.dam.delaiglesia.sendmeal.Home;
 import frsf.isi.dam.delaiglesia.sendmeal.ListaItems;
+import frsf.isi.dam.delaiglesia.sendmeal.MapsActivity;
 import frsf.isi.dam.delaiglesia.sendmeal.NuevoItem;
 import frsf.isi.dam.delaiglesia.sendmeal.R;
 import frsf.isi.dam.delaiglesia.sendmeal.domain.ItemPedido;
@@ -46,7 +48,10 @@ public class NuevoPedido extends AppCompatActivity {
     private TextView txtTotal;
 
     private Pedido pedido;
+    Double latitud;
+    Double longitud;
 
+    private static final int CODIGO_SELECCIONAR_COORDENADAS = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +80,6 @@ public class NuevoPedido extends AppCompatActivity {
 
             //obtenemos la lista de itemsPedido
             ArrayList<ItemPedido> itemsPedido = (ArrayList<ItemPedido>) getIntent().getSerializableExtra("itemsPedido");
-
 
             //cargamos los platos y las cantidades en la tabla
             TableLayout table = (TableLayout) this.findViewById(R.id.idTablaResumenPedido);
@@ -107,7 +111,8 @@ public class NuevoPedido extends AppCompatActivity {
         botonSeleccionarUbicacion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //a implementar en lab05
+                Intent i = new Intent(context, MapsActivity.class);
+                startActivityForResult(i, CODIGO_SELECCIONAR_COORDENADAS);
             }
         });
 
@@ -130,18 +135,19 @@ public class NuevoPedido extends AppCompatActivity {
                 if (itemsPedido==null){
                     Toast.makeText(context,"Agregá al menos un plato a tu pedido", Toast.LENGTH_SHORT).show();
                 }
-
+                //verificamos que haya seleccionado la ubicacion del pedido
+                else if(latitud==null){
+                    Toast.makeText(context,"Indica la ubicación de tu pedido", Toast.LENGTH_SHORT).show();
+                }
                 else {
-
                     //crear pedido
                     pedido = new Pedido();
                     //seteamos los valores restantes de itemsPedido y creamos el pedido
                     pedido.setEstado(1);
-                    pedido.setLat(0.0);
-                    pedido.setLng(0.0);
+                    pedido.setLat(latitud);
+                    pedido.setLng(longitud);
                     pedido.setItems(itemsPedido);
                     pedido.setFecha(new Date());
-
 
                     //completar los valores de itemsPedido
                     for (int i = 0; i < itemsPedido.size(); i++) {
@@ -159,8 +165,10 @@ public class NuevoPedido extends AppCompatActivity {
         botonEnviarPedido.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                pedido.setEstado(2);
+                GuardarPedido tareaGuardarPedido = new GuardarPedido();
+                tareaGuardarPedido.execute(pedido);
                 Repository.getInstance().crearPedido(pedido, miHandler);
-                //finish();
             }
         });
     }
@@ -201,7 +209,7 @@ public class NuevoPedido extends AppCompatActivity {
             super.onPostExecute(aVoid);
            // pedido = null;
 
-            Toast.makeText(context, "Su pedido se ha creado con éxito!", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Su pedido se ha creado con éxito!", Toast.LENGTH_SHORT).show();
             botonEnviarPedido.setEnabled(true);
         }
     }
@@ -213,7 +221,7 @@ public class NuevoPedido extends AppCompatActivity {
 
             switch (msg.arg1 ){
                 case Repository._ALTA_PEDIDO:
-                    Toast.makeText(context, "Su pedido se ha enviado al servidor con éxito!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Su pedido se ha enviado al servidor con éxito!", Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(NuevoPedido.this, Home.class);
                     startActivity(i);
                     break;
@@ -232,5 +240,19 @@ public class NuevoPedido extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // Nos fijamos de que actividad viene el resultado
+        if (requestCode == CODIGO_SELECCIONAR_COORDENADAS) {
+            // Verificamos que el request tuvo éxito
+            if (resultCode == RESULT_OK) {
+                //obtenemos las coordenadas seleccionadas
+                latitud = data.getDoubleExtra("latitud", 0);
+                longitud = data.getDoubleExtra("longitud", 0);
+            }
+        }
     }
 }

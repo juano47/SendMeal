@@ -13,6 +13,11 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_ver_pedidos_mapa"
+        android:title="Ver ubicación de pedidos"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_crear_item"
         android:title="@string/action_crear_item"
         android:icon="@drawable/crear_itemm"

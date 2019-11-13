@@ -76,7 +76,7 @@
         app:layout_constraintTop_toTopOf="@+id/textView26" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/buttonVerUbicacionPedido"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -95,7 +95,7 @@
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button">
+        app:layout_constraintTop_toBottomOf="@+id/buttonVerUbicacionPedido">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

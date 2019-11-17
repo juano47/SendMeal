@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import frsf.isi.dam.delaiglesia.sendmeal.Auxiliares.ImageUtil;
-import frsf.isi.dam.delaiglesia.sendmeal.Dao.PlatoRepository;
+import frsf.isi.dam.delaiglesia.sendmeal.Dao.Repository;
 import frsf.isi.dam.delaiglesia.sendmeal.domain.Plato;
 
 
@@ -153,7 +153,7 @@ public class AdaptadorItem extends RecyclerView.Adapter<AdaptadorItem.ItemViewHo
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dlgInt, int i) {
-                                PlatoRepository.getInstance().borrarPlato(platos.get(fila), miHandler);
+                                Repository.getInstance().borrarPlato(platos.get(fila), miHandler);
 
                             }
                         })
@@ -173,14 +173,14 @@ public class AdaptadorItem extends RecyclerView.Adapter<AdaptadorItem.ItemViewHo
         public void handleMessage(Message msg) {
 
             switch (msg.arg1 ) {
-                case PlatoRepository._BORRADO_PLATO:
+                case Repository._BORRADO_PLATO:
                     //accion eliminar
                     platos.remove(fila2);
                     notifyItemRemoved(fila2);
 
                     break;
 
-                case PlatoRepository._ERROR_PLATO:
+                case Repository._ERROR_PLATO:
 
                     break;
 

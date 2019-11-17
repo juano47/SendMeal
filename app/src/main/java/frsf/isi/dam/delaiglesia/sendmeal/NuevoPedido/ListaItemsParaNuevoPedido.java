@@ -1,44 +1,29 @@
 package frsf.isi.dam.delaiglesia.sendmeal.NuevoPedido;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-import frsf.isi.dam.delaiglesia.sendmeal.AdaptadorItem;
-import frsf.isi.dam.delaiglesia.sendmeal.Auxiliares.RecyclerItemTouchHelper;
-import frsf.isi.dam.delaiglesia.sendmeal.Dao.PlatoRepository;
-import frsf.isi.dam.delaiglesia.sendmeal.Home;
-import frsf.isi.dam.delaiglesia.sendmeal.ListaBusqueda;
-import frsf.isi.dam.delaiglesia.sendmeal.ListaItems;
-import frsf.isi.dam.delaiglesia.sendmeal.MyIntentService;
-import frsf.isi.dam.delaiglesia.sendmeal.NuevoItem;
+import frsf.isi.dam.delaiglesia.sendmeal.Dao.Repository;
 import frsf.isi.dam.delaiglesia.sendmeal.R;
 import frsf.isi.dam.delaiglesia.sendmeal.domain.ItemPedido;
 import frsf.isi.dam.delaiglesia.sendmeal.domain.Plato;
-import io.apptik.widget.MultiSlider;
 
 public class ListaItemsParaNuevoPedido extends AppCompatActivity{
 
@@ -69,7 +54,7 @@ public class ListaItemsParaNuevoPedido extends AppCompatActivity{
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         //solicitamos la lista de platos guardada en el servidor
-        PlatoRepository.getInstance().listarPlatos(miHandler);
+        Repository.getInstance().listarPlatos(miHandler);
 
         //getting the recyclerview from xml
         mRecyclerView = (RecyclerView) findViewById(R.id.reciclerViewListaItems);
@@ -96,6 +81,8 @@ public class ListaItemsParaNuevoPedido extends AppCompatActivity{
                         ItemPedido itemPedido = new ItemPedido();
                         itemPedido.setPlato(listaCompleta.get(i));
                         itemPedido.setCantidad(Integer.parseInt(listaCantidades[i]));
+                        itemPedido.setPrecio(listaCompleta.get(i).getPrecio());
+                        itemPedido.setIdPlato(listaCompleta.get(i).getId());
                         itemsPedido.add(itemPedido);
                     }
                 }
@@ -113,16 +100,16 @@ public class ListaItemsParaNuevoPedido extends AppCompatActivity{
         public void handleMessage(Message msg) {
 
             switch (msg.arg1 ) {
-                case PlatoRepository._CONSULTA_PLATO:
-                    listaDataSetCompleta = PlatoRepository.getInstance().getListaPlatosCompleta();
+                case Repository._CONSULTA_PLATO:
+                    listaDataSetCompleta = Repository.getInstance().getListaPlatosCompleta();
                     //solo al momento de tener la lista de platos desde el servidor la seteamos en pantalla
                     listaCompleta.addAll(listaDataSetCompleta);
                     miAdaptador.notifyDataSetChanged();
                     miAdaptador.setTamanioListaCantidades(listaCompleta.size());
                     break;
 
-                case PlatoRepository._BUSQUEDA_PLATO:
-                    ArrayList<Plato> listaDataSetBusqueda = PlatoRepository.getInstance().getListaPlatosBusqueda();
+                case Repository._BUSQUEDA_PLATO:
+                    ArrayList<Plato> listaDataSetBusqueda = Repository.getInstance().getListaPlatosBusqueda();
                     if(!listaDataSetBusqueda.isEmpty()) {
                         Intent i2 = new Intent(context, ListaBusquedaParaNuevoPedido.class);
                         i2.putExtra("platos", listaDataSetBusqueda);
@@ -152,7 +139,7 @@ public class ListaItemsParaNuevoPedido extends AppCompatActivity{
                         dialog.show();
                     }
 
-                case PlatoRepository._ERROR_PLATO:
+                case Repository._ERROR_PLATO:
 
                     break;
             }
@@ -174,6 +161,9 @@ public class ListaItemsParaNuevoPedido extends AppCompatActivity{
                 onBackPressed();
                 return true;
             case R.id.action_buscar_item:
+
+                Toast.makeText(context, "No es posible realizar búsquedas en este momento. Intente más tarde",Toast.LENGTH_SHORT).show();
+                /*
                 // Get the layout inflater
                 LayoutInflater inflater = getLayoutInflater();
                 // Inflar y establecer el layout para el dialogo
@@ -214,7 +204,7 @@ public class ListaItemsParaNuevoPedido extends AppCompatActivity{
                                         String nombre = txtnombre.getText().toString();
                                         Double min = Double.valueOf(txtmin.getText().toString());
                                         Double max = Double.valueOf(txtmax.getText().toString());
-                                        PlatoRepository.getInstance().buscarPlatos(nombre, min , max, miHandler);
+                                        Repository.getInstance().buscarPlatos(nombre, min , max, miHandler);
 
                                     }
                                 })
@@ -233,7 +223,7 @@ public class ListaItemsParaNuevoPedido extends AppCompatActivity{
                 dialog.show();
 
 
-                return true;
+                return true;*/
         }
         return super.onOptionsItemSelected(item);
     }

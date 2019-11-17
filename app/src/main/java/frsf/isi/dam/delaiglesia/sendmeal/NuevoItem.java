@@ -3,19 +3,12 @@ package frsf.isi.dam.delaiglesia.sendmeal;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -23,19 +16,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
 
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
-import frsf.isi.dam.delaiglesia.sendmeal.Auxiliares.ImageUtil;
 import frsf.isi.dam.delaiglesia.sendmeal.Dao.PlatoRepository;
 import frsf.isi.dam.delaiglesia.sendmeal.domain.Plato;
 
@@ -66,23 +53,13 @@ public class NuevoItem extends AppCompatActivity {
     private boolean validacionCaloriasVacio;
 
     private Button buttonGuardar;
-    private Button buttonSacarFoto;
 
     ArrayList<Plato> platos;
-
-    ImageView foto;
-    Bitmap imageBitmap;
-
-    Context context;
-
-    static final int REQUEST_IMAGE_CAPTURE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nuevo_item);
-
-        context = this;
 
         //define la flecha para volver en la actionBar
         ActionBar actionBar = getSupportActionBar();
@@ -107,8 +84,6 @@ public class NuevoItem extends AppCompatActivity {
         editTextDescripcionPlato = til_descripcionPlato.getEditText();
         editTextPrecioPlato = til_precioPlato.getEditText();
         editTextCaloriasPlato = til_caloriasPlato.getEditText();
-
-        foto = findViewById(R.id.imageViewFoto);
 
 
         //acción a realizar al llegar un plato para ser editado desde la lista de platos
@@ -229,23 +204,14 @@ public class NuevoItem extends AppCompatActivity {
 
         //Botón Guardar
         buttonGuardar = (Button) findViewById(R.id.buttonGuardarNuevoItem);
+
         buttonGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 validarDatos();
                 if(validacionIdVacio&&validacionNombreVacio&&validacionDescripcionVacio&&validacionPrecioVacio&&validacionCaloriasVacio){
-
-                    //sino sacó una foto seteamos una imagen por default
-
-                    if (imageBitmap==null) {
-                        foto.buildDrawingCache();
-                        imageBitmap = foto.getDrawingCache();
-                    }
-                   //convertimos la foto a String para guardar en el API REST
-                    String fotoBase64String = ImageUtil.convert(imageBitmap);
                     //Creamos el plato
-                    Plato plato = new Plato(Integer.valueOf(idPlato), nombrePlato, descripcionPlato, Double.valueOf(precioPlato), Integer.valueOf(caloriasPlato), false, fotoBase64String);
-
+                    Plato plato = new Plato(Integer.valueOf(idPlato), nombrePlato, descripcionPlato, Double.valueOf(precioPlato), Integer.valueOf(caloriasPlato), false);
                     Intent intentResultado = new Intent();
                     //verificamos si se llamo la actividad desde la lista comprobando si fila!=null en el getIntent
                     if ( getIntent().getSerializableExtra("fila")!=null){
@@ -263,21 +229,6 @@ public class NuevoItem extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"Ingreso de datos incorrectos o algún campo vacío", Toast.LENGTH_SHORT).show();
             }
         });
-
-        //Botón Sacar foto
-        //teniendo en cuenta que solo necesitamos mostrar una miniatura del plato, solo trabajaremos con el thumbnail
-        buttonSacarFoto = findViewById(R.id.buttonAgregarFoto);
-        buttonSacarFoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                }
-
-            }
-        });
-
     }
 
     Handler miHandler = new Handler(Looper.myLooper()){
@@ -293,6 +244,7 @@ public class NuevoItem extends AppCompatActivity {
             }
         }
     };
+
 
     private void validarDatos() {
         //setear variables
@@ -350,17 +302,6 @@ public class NuevoItem extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            imageBitmap = (Bitmap) extras.get("data");
-            foto.setImageBitmap(imageBitmap);
-        }
     }
 
 

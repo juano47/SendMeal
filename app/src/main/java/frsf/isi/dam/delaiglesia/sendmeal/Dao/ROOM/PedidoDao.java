@@ -8,7 +8,6 @@ import androidx.room.Update;
 
 import java.util.List;
 
-
 import frsf.isi.dam.delaiglesia.sendmeal.domain.Pedido;
 
 @Dao
@@ -27,4 +26,7 @@ public interface PedidoDao {
 
     @Update
     void actualizar(Pedido pedido);
+
+    @Query("SELECT * FROM pedido WHERE id=:idPedido")
+    Pedido getPedido(Integer idPedido);
 }

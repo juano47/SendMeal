@@ -1,15 +1,36 @@
 package frsf.isi.dam.delaiglesia.sendmeal;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+
+import java.util.List;
+import java.util.Random;
+
+import frsf.isi.dam.delaiglesia.sendmeal.Dao.ROOM.DBPedido;
+import frsf.isi.dam.delaiglesia.sendmeal.Dao.ROOM.PedidoDao;
 import frsf.isi.dam.delaiglesia.sendmeal.NuevoPedido.NuevoPedido;
+import frsf.isi.dam.delaiglesia.sendmeal.ServicioPush.ActualizacionPedidoPushService;
+import frsf.isi.dam.delaiglesia.sendmeal.domain.Pedido;
+
+import static androidx.core.app.NotificationCompat.CATEGORY_PROMO;
 
 public class Home extends AppCompatActivity {
 
@@ -17,6 +38,27 @@ public class Home extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        SharedPreferences prefs = getSharedPreferences("TOKEN_PREF", MODE_PRIVATE);
+        final String token = prefs.getString("token", "");
+
+        Log.e("NEW_INACTIVITY_TOKEN", token);
+
+        if (TextUtils.isEmpty(token)) {
+            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(Home.this, new OnSuccessListener<InstanceIdResult>() {
+                @Override
+                public void onSuccess(InstanceIdResult instanceIdResult) {
+                    String newToken = instanceIdResult.getToken();
+                    Log.e("newToken", newToken);
+                    SharedPreferences.Editor editor = getSharedPreferences("TOKEN_PREF", MODE_PRIVATE).edit();
+                    if (token!=null){
+                        editor.putString("token", newToken);
+                        editor.apply();
+                    }
+
+                }
+            });
+        }
     }
 
     @Override
@@ -54,6 +96,43 @@ public class Home extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    //si la aplicación está en 2° plano, al enviar un mensaje push no se activa el método onMessageReceived y siempre se abre
+    //esta actividad. Por lo que verificamos si en el intent hay extras con las keys "idPedido" y "nuevoEstado" .
+    // y abrimos la actividad DetallePedido en caso afirmativo
+    @Override
+    protected void onResume() {
+        super.onResume();
+        final Pedido[] pedido = new Pedido[1];
+        if (getIntent().getExtras() != null) {
+            final Bundle b = getIntent().getExtras();
+                final Intent i = new Intent(Home.this, DetallePedido.class);
+                if(b.getString("idPedido")!=null&&b.getString("nuevoEstado")!=null) {
+
+                    final Runnable hiloUpdateLista = new Runnable() {
+                        @Override
+                        public void run() {
+                            //solo cambiamos el estado del pedido en memoria para mostrarlo, se debería actualizar el pedido en la DB local
+                            //y en el servidor REST.
+                            pedido[0].setEstado(Integer.valueOf(b.getString("nuevoEstado")));
+                            i.putExtra("pedido", pedido[0]);
+                            startActivity(i);
+                        }
+                    };
+
+                    final Runnable cargarPedidos = new Runnable() {
+                        @Override
+                        public void run() {
+                            PedidoDao dao = DBPedido.getInstance(Home.this).getSendMealDB().pedidoDao();
+                            pedido[0] = dao.getPedido(Integer.valueOf(b.getString("idPedido")));
+                            runOnUiThread(hiloUpdateLista);
+                        }
+                    };
+                    Thread t1 = new Thread(cargarPedidos);
+                    t1.start();
+                }
         }
     }
 }

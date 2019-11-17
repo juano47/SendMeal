@@ -125,7 +125,6 @@ public class ListaItems extends AppCompatActivity implements AdaptadorItem.Callb
             PendingIntent pendingIntent =
                     PendingIntent.getActivity(context,dummyuniqueInt , destino, PendingIntent.FLAG_UPDATE_CURRENT);
 
-
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(context, CATEGORY_PROMO)
                             .setSmallIcon(R.drawable.ic_sentiment_very_satisfied)

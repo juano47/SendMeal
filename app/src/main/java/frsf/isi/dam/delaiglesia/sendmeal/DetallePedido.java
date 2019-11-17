@@ -47,7 +47,8 @@ public class DetallePedido extends AppCompatActivity {
         setContentView(R.layout.activity_detalle_pedido);
 
         pedido = (Pedido) getIntent().getSerializableExtra("pedido");
-
+        if (getIntent().getSerializableExtra("pedido")!=null)
+        Log.e("2", String.valueOf(pedido.getId()));
         //referencias a TextViews
         idPedido = findViewById(R.id.textViewDetallePedidoId);
         fechaPedido = findViewById(R.id.textViewDetallePedidoFecha);

@@ -127,11 +127,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));;
                                 break;
                         }
-                        //mostramos un marcador por pedido
-                        mMap.addMarker(new MarkerOptions()
-                                .position(new LatLng(listaPedidosDataset.get(i).getLat(), listaPedidosDataset.get(i).getLng()))
-                                .title	(listaPedidosDataset.get(i).getId().toString())
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));;
                     }
                 }
             };

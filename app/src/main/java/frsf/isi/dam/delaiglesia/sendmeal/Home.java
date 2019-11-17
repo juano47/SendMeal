@@ -1,36 +1,20 @@
 package frsf.isi.dam.delaiglesia.sendmeal;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
+import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
-
-import java.util.List;
-import java.util.Random;
-
 import frsf.isi.dam.delaiglesia.sendmeal.Dao.ROOM.DBPedido;
 import frsf.isi.dam.delaiglesia.sendmeal.Dao.ROOM.PedidoDao;
 import frsf.isi.dam.delaiglesia.sendmeal.NuevoPedido.NuevoPedido;
-import frsf.isi.dam.delaiglesia.sendmeal.ServicioPush.ActualizacionPedidoPushService;
 import frsf.isi.dam.delaiglesia.sendmeal.domain.Pedido;
-
-import static androidx.core.app.NotificationCompat.CATEGORY_PROMO;
 
 public class Home extends AppCompatActivity {
 
@@ -55,7 +39,6 @@ public class Home extends AppCompatActivity {
                         editor.putString("token", newToken);
                         editor.apply();
                     }
-
                 }
             });
         }

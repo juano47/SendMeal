@@ -1,9 +1,5 @@
 package frsf.isi.dam.delaiglesia.sendmeal.NuevoPedido;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -21,6 +17,10 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -29,9 +29,7 @@ import frsf.isi.dam.delaiglesia.sendmeal.Dao.ROOM.ItemPedidoDao;
 import frsf.isi.dam.delaiglesia.sendmeal.Dao.ROOM.PedidoDao;
 import frsf.isi.dam.delaiglesia.sendmeal.Dao.Repository;
 import frsf.isi.dam.delaiglesia.sendmeal.Home;
-import frsf.isi.dam.delaiglesia.sendmeal.ListaItems;
 import frsf.isi.dam.delaiglesia.sendmeal.MapsActivity;
-import frsf.isi.dam.delaiglesia.sendmeal.NuevoItem;
 import frsf.isi.dam.delaiglesia.sendmeal.R;
 import frsf.isi.dam.delaiglesia.sendmeal.domain.ItemPedido;
 import frsf.isi.dam.delaiglesia.sendmeal.domain.Pedido;
@@ -85,15 +83,8 @@ public class NuevoPedido extends AppCompatActivity {
             TableLayout table = (TableLayout) this.findViewById(R.id.idTablaResumenPedido);
             Double total = 0.00;
             for (int i = 0; i < itemsPedido.size(); i++) {
-
                 final TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.item_tabla_resumen_pedido, null);
 
-                row.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Log.e("",  ((TextView) row.findViewById(R.id.idNombreProducto)).getText().toString());
-                    }
-                });
                 ((TextView) row.findViewById(R.id.idNombreProducto)).setText(itemsPedido.get(i).getPlato().getTitulo());
                 ((TextView) row.findViewById(R.id.idCantidadProducto)).setText(itemsPedido.get(i).getCantidad().toString());
                 Double precio = itemsPedido.get(i).getPlato().getPrecio();
@@ -104,7 +95,6 @@ public class NuevoPedido extends AppCompatActivity {
 
                 table.addView(row);
             }
-
             txtTotal.setText("$ " + String.valueOf(total));
         }
 
@@ -127,7 +117,6 @@ public class NuevoPedido extends AppCompatActivity {
         botonCrearPedido.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 //obtenemos la lista de itemsPedido
                 ArrayList<ItemPedido> itemsPedido = (ArrayList<ItemPedido>) getIntent().getSerializableExtra("itemsPedido");
 

@@ -1,9 +1,6 @@
 package frsf.isi.dam.delaiglesia.sendmeal;
 
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,15 +15,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.material.textfield.TextInputLayout;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 
 import frsf.isi.dam.delaiglesia.sendmeal.Dao.Repository;
 import frsf.isi.dam.delaiglesia.sendmeal.domain.Plato;
-
-import static java.lang.Thread.sleep;
 
 public class NuevoItem extends AppCompatActivity {
 

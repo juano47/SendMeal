@@ -1,7 +1,5 @@
 package frsf.isi.dam.delaiglesia.sendmeal.Dao.ROOM;
 
-import android.content.Intent;
-
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;

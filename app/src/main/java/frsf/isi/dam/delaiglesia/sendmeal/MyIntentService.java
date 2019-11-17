@@ -2,9 +2,6 @@ package frsf.isi.dam.delaiglesia.sendmeal;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.util.Log;
-
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import frsf.isi.dam.delaiglesia.sendmeal.domain.Plato;
 

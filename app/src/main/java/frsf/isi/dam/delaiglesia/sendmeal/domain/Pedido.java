@@ -1,11 +1,8 @@
 package frsf.isi.dam.delaiglesia.sendmeal.domain;
 
-import android.os.Parcelable;
-
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-import androidx.room.Relation;
 
 import java.io.Serializable;
 import java.util.Date;

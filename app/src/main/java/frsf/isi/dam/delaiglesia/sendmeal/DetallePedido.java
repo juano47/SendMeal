@@ -1,7 +1,5 @@
 package frsf.isi.dam.delaiglesia.sendmeal;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,23 +7,25 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import frsf.isi.dam.delaiglesia.sendmeal.Dao.Repository;
 import frsf.isi.dam.delaiglesia.sendmeal.Dao.ROOM.DBPedido;
 import frsf.isi.dam.delaiglesia.sendmeal.Dao.ROOM.ItemPedidoDao;
+import frsf.isi.dam.delaiglesia.sendmeal.Dao.Repository;
 import frsf.isi.dam.delaiglesia.sendmeal.domain.ItemPedido;
 import frsf.isi.dam.delaiglesia.sendmeal.domain.Pedido;
 import frsf.isi.dam.delaiglesia.sendmeal.domain.Plato;
-
-import static java.lang.Thread.sleep;
 
 public class DetallePedido extends AppCompatActivity {
 
@@ -45,6 +45,10 @@ public class DetallePedido extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalle_pedido);
+
+        //define la flecha para volver en la actionBar
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         pedido = (Pedido) getIntent().getSerializableExtra("pedido");
         if (getIntent().getSerializableExtra("pedido")!=null)
@@ -173,4 +177,17 @@ public class DetallePedido extends AppCompatActivity {
             }
         }
     };
+
+    //flecha volver en la actionbar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                Intent i = new Intent(DetallePedido.this, Home.class);
+                startActivity(i);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

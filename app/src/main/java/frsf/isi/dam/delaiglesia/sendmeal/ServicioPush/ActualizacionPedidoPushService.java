@@ -2,11 +2,8 @@ package frsf.isi.dam.delaiglesia.sendmeal.ServicioPush;
 
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -16,12 +13,8 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Random;
 
-import frsf.isi.dam.delaiglesia.sendmeal.DetallePedido;
 import frsf.isi.dam.delaiglesia.sendmeal.Home;
-import frsf.isi.dam.delaiglesia.sendmeal.NuevoItem;
 import frsf.isi.dam.delaiglesia.sendmeal.R;
-
-import static androidx.core.app.NotificationCompat.CATEGORY_PROMO;
 
 public class ActualizacionPedidoPushService extends FirebaseMessagingService {
 

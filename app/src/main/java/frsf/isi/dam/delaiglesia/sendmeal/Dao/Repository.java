@@ -4,7 +4,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import java.security.acl.LastOwnerException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -212,7 +211,6 @@ public class Repository {
     //***********Pedidos*******************
 
     public void crearPedido(Pedido o, final Handler h){
-        Log.e("", String.valueOf(o.getEstado()));
         Call<Pedido> llamada = this.pedidoRest.crear(o);
         llamada.enqueue(new Callback<Pedido>() {
             @Override

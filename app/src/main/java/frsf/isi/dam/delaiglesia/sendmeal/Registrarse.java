@@ -37,19 +37,19 @@ public class Registrarse extends AppCompatActivity {
     private TextInputLayout tilAliasCbu;
     private TextInputLayout tilCbu;
 
-    private EditText txtNombre;
-    private EditText txtMail;
-    private EditText txtClave;
-    private EditText txtRepetirClave;
-    private EditText txtTarjetaNumero;
-    private EditText txtTarjetaFecha;
-    private EditText txtTarjetaCcv;
-    private EditText txtAliasCbu;
-    private EditText txtCbu;
+     EditText txtNombre;
+     EditText txtMail;
+     EditText txtClave;
+     EditText txtRepetirClave;
+     EditText txtTarjetaNumero;
+     EditText txtTarjetaFecha;
+     EditText txtTarjetaCcv;
+     EditText txtAliasCbu;
+     EditText txtCbu;
 
     private TextView textViewCreditoInicial;
 
-    private RadioGroup radioGroupTipoCuenta;
+     RadioGroup radioGroupTipoCuenta;
     private SeekBar seekBarCreditoInicial;
     private Switch switchEsVendedor;
     private CheckBox checkBoxTerminos;
@@ -501,7 +501,7 @@ public class Registrarse extends AppCompatActivity {
         });
     }
 
-    private void validarDatos() {
+    public void validarDatos() {
         //Setear variables
         nombre = txtNombre.getText().toString();
         mail = txtMail.getText().toString();

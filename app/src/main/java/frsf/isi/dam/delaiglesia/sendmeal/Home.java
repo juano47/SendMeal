@@ -59,6 +59,7 @@ public class Home extends AppCompatActivity {
                 return true;
             case R.id.action_crear_item:
                 Intent i2 = new Intent(this, NuevoItem.class);
+                startActivity(i2);
                 return true;
             case R.id.action_ver_lista_platos:
                 Intent i3 = new Intent(this, ListaItems.class);

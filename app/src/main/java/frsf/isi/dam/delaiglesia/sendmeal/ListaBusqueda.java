@@ -123,8 +123,8 @@ public class ListaBusqueda extends AppCompatActivity implements AdaptadorItem.Ca
 
             NotificationManagerCompat notificationManager =
                     NotificationManagerCompat.from(context);
-            notificationManager.notify(new Random().nextInt(543254), mBuilder.build());
-            //usamos un numero aleatorio para que se interprete como notificaciones distintas y no reescriba la primera si se envian varias
+            notificationManager.notify(0, mBuilder.build());
+            //en id podriamos usar un numero aleatorio para que se interprete como notificaciones distintas y no reescriba la primera si se envian varias
             //faltaría agruparlas!
 
         }

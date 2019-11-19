@@ -135,7 +135,7 @@ public class ListaItems extends AppCompatActivity implements AdaptadorItem.Callb
 
             NotificationManagerCompat notificationManager =
                     NotificationManagerCompat.from(context);
-            notificationManager.notify(new Random().nextInt(543254), mBuilder.build());
+            notificationManager.notify(new Random().nextInt(543252), mBuilder.build());
             //usamos un numero aleatorio para que se interprete como notificaciones distintas y no reescriba la primera si se envian varias
             //faltaría agruparlas!
 

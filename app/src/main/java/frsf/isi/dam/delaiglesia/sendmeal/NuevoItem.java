@@ -286,7 +286,7 @@ public class NuevoItem extends AppCompatActivity {
         }
     };
 
-    private void validarDatos() {
+    public void validarDatos() {
         //setear variables
         idPlato = editTextIdPlato.getText().toString();
         nombrePlato = editTextNombrePlato.getText().toString();

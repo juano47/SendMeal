@@ -73,7 +73,7 @@ public class RegistrarseUnitTest<val> {
     public void validarCuentaSeleccionadaTest() {
 
         //necesario solo para evitar nulls
-        doReturn("").when(edtMock).toString();
+        doReturn("algo").when(edtMock).toString();
         doReturn(edtMock).when(edtNombreMock).getText();
         doReturn(edtMock).when(edtMailPlatoMock).getText();
         doReturn(edtMock).when(edtClaveMock).getText();
@@ -97,7 +97,7 @@ public class RegistrarseUnitTest<val> {
         registrarseActivity.radioGroupTipoCuenta = radioGroupTipoCuentaMock;
 
         //acá empieza el test
-        registrarseActivity.radioGroupTipoCuenta.check(0);
+        registrarseActivity.radioGroupTipoCuenta.check(-1);
         registrarseActivity.validarDatos();
 
         assertTrue("Cuenta seleccionda", registrarseActivity.validacionTipoCuentaSeleccionada);
